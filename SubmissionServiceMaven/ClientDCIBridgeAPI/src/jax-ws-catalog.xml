@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="https://submission.cpc.wmin.ac.uk:8181/SubmissionService/WSExecutionService?wsdl=1" uri="wsdl/submission.cpc.wmin.ac.uk_8181/SubmissionService/WSExecutionService.wsdl_1.wsdl"/>
+    <system systemId="https://submission.cpc.wmin.ac.uk:8181/SubmissionService/WSExecutionService?xsd=1" uri="wsdl/submission.cpc.wmin.ac.uk_8181/SubmissionService/WSExecutionService.xsd_1.xsd"/>
+    <system systemId="https://submission.cpc.wmin.ac.uk:8181/SubmissionService/WSExecutionService?xsd=2" uri="wsdl/submission.cpc.wmin.ac.uk_8181/SubmissionService/WSExecutionService.xsd_2.xsd"/>
+    <system systemId="http://submission.cpc.wmin.ac.uk:8080/SubmissionService/WSExecutionService?wsdl" uri="wsdl/submission.cpc.wmin.ac.uk_8080/SubmissionService/WSExecutionService.wsdl"/>
+    <system systemId="http://submission.cpc.wmin.ac.uk:8080/SubmissionService/WSExecutionService?wsdl=1" uri="wsdl/submission.cpc.wmin.ac.uk_8080/SubmissionService/WSExecutionService.wsdl_1.wsdl"/>
+    <system systemId="http://submission.cpc.wmin.ac.uk:8080/SubmissionService/WSExecutionService?xsd=1" uri="wsdl/submission.cpc.wmin.ac.uk_8080/SubmissionService/WSExecutionService.xsd_1.xsd"/>
+    <system systemId="http://submission.cpc.wmin.ac.uk:8080/SubmissionService/WSExecutionService?xsd=2" uri="wsdl/submission.cpc.wmin.ac.uk_8080/SubmissionService/WSExecutionService.xsd_2.xsd"/>
+</catalog>

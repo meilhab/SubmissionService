@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.3 (tags/2.3-7528; 2013-04-29T19:34:10+0000) JAXWS-RI/2.2.8 JAXWS/2.2 svn-revision#unknown. --><xs:schema xmlns:tns="http://interfaces.submission.repository.shiwa.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://interfaces.submission.repository.shiwa.org/">
+
+<xs:complexType name="implShort">
+<xs:sequence>
+<xs:element name="description" type="xs:string" minOccurs="0"/>
+<xs:element name="name" type="xs:string" minOccurs="0"/>
+<xs:element name="selected" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="beInstance" abstract="true">
+<xs:sequence>
+<xs:element name="backendErrorOut" type="xs:string" minOccurs="0"/>
+<xs:element name="backendInstName" type="xs:string" minOccurs="0"/>
+<xs:element name="backendOutput" type="xs:string" minOccurs="0"/>
+<xs:element name="idBackend" type="tns:backend" minOccurs="0"/>
+<xs:element name="idBackendInst" type="xs:int" minOccurs="0"/>
+<xs:element name="idOS" type="tns:operatingSystems" minOccurs="0"/>
+<xs:element name="resource" type="xs:string" minOccurs="0"/>
+<xs:element name="WEDev" type="tns:user" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="backend">
+<xs:sequence>
+<xs:element name="backendDesc" type="xs:string" minOccurs="0"/>
+<xs:element name="backendName" type="xs:string" minOccurs="0"/>
+<xs:element name="idBackend" type="xs:int" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="operatingSystems">
+<xs:sequence>
+<xs:element name="idOS" type="xs:int" minOccurs="0"/>
+<xs:element name="name" type="xs:string" minOccurs="0"/>
+<xs:element name="version" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="user">
+<xs:sequence>
+<xs:element name="email" type="xs:string" minOccurs="0"/>
+<xs:element name="fullName" type="xs:string" minOccurs="0"/>
+<xs:element name="loginName" type="xs:string" minOccurs="0"/>
+<xs:element name="organization" type="xs:string" minOccurs="0"/>
+<xs:element name="passHash" type="xs:string" minOccurs="0"/>
+<xs:element name="user" type="xs:boolean"/>
+<xs:element name="WEDev" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="gLite">
+<xs:complexContent>
+<xs:extension base="tns:beInstance">
+<xs:sequence/>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="gt4">
+<xs:complexContent>
+<xs:extension base="tns:beInstance">
+<xs:sequence>
+<xs:element name="jobManager" type="xs:string" minOccurs="0"/>
+<xs:element name="jobTypeId" type="tns:jobType" minOccurs="0"/>
+<xs:element name="site" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="jobType">
+<xs:sequence>
+<xs:element name="jobTypeId" type="xs:int" minOccurs="0"/>
+<xs:element name="jobTypeName" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="gt2">
+<xs:complexContent>
+<xs:extension base="tns:beInstance">
+<xs:sequence>
+<xs:element name="jobManager" type="xs:string" minOccurs="0"/>
+<xs:element name="jobTypeId" type="tns:jobType" minOccurs="0"/>
+<xs:element name="site" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="local">
+<xs:complexContent>
+<xs:extension base="tns:beInstance">
+<xs:sequence/>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="parameter">
+<xs:sequence>
+<xs:element name="index" type="xs:int"/>
+<xs:element name="value" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

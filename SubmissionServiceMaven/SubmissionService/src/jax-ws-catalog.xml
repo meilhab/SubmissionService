@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://shiwa-repo.cpc.wmin.ac.uk:8080/shiwa-repo/SubmissionService?wsdl" uri="wsdl/shiwa-repo.cpc.wmin.ac.uk_8080/shiwa-repo/SubmissionService.wsdl"/>
+    <system systemId="http://shiwa-repo.cpc.wmin.ac.uk:8080/shiwa-repo/SubmissionService?wsdl=1" uri="wsdl/shiwa-repo.cpc.wmin.ac.uk_8080/shiwa-repo/SubmissionService.wsdl_1.wsdl"/>
+    <system systemId="http://shiwa-repo.cpc.wmin.ac.uk:8080/shiwa-repo/SubmissionService?xsd=1" uri="wsdl/shiwa-repo.cpc.wmin.ac.uk_8080/shiwa-repo/SubmissionService.xsd_1.xsd"/>
+</catalog>

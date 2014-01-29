@@ -1,0 +1,326 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2.1-hudson-28-. --><xs:schema xmlns:tns="http://interfaces.submission.repository.shiwa.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://interfaces.submission.repository.shiwa.org/">
+
+<xs:element name="DatabaseProblemException" type="tns:DatabaseProblemException" />
+
+<xs:element name="ForbiddenException" type="tns:ForbiddenException" />
+
+<xs:element name="NotFoundException" type="tns:NotFoundException" />
+
+<xs:element name="UnauthorizedException" type="tns:UnauthorizedException" />
+
+<xs:element name="backend" type="tns:backend" />
+
+<xs:element name="beInstance" type="tns:beInstance" />
+
+<xs:element name="getAllPublicValidatedImplementations" type="tns:getAllPublicValidatedImplementations" />
+
+<xs:element name="getAllPublicValidatedImplementationsResponse" type="tns:getAllPublicValidatedImplementationsResponse" />
+
+<xs:element name="getAllWorkflowEngineInstances" type="tns:getAllWorkflowEngineInstances" />
+
+<xs:element name="getAllWorkflowEngineInstancesResponse" type="tns:getAllWorkflowEngineInstancesResponse" />
+
+<xs:element name="getBackendInstance" type="tns:getBackendInstance" />
+
+<xs:element name="getBackendInstanceResponse" type="tns:getBackendInstanceResponse" />
+
+<xs:element name="getFullImplForJSDL" type="tns:getFullImplForJSDL" />
+
+<xs:element name="getFullImplForJSDLResponse" type="tns:getFullImplForJSDLResponse" />
+
+<xs:element name="getFullWEIForJSDL" type="tns:getFullWEIForJSDL" />
+
+<xs:element name="getFullWEIForJSDLResponse" type="tns:getFullWEIForJSDLResponse" />
+
+<xs:element name="getLCParameters" type="tns:getLCParameters" />
+
+<xs:element name="getLCParametersResponse" type="tns:getLCParametersResponse" />
+
+<xs:element name="implJSDL" type="tns:implJSDL" />
+
+<xs:element name="jobType" type="tns:jobType" />
+
+<xs:element name="operatingSystems" type="tns:operatingSystems" />
+
+<xs:element name="workflowEngineInstance" type="tns:workflowEngineInstance" />
+
+<xs:complexType name="getAllWorkflowEngineInstances">
+<xs:sequence>
+<xs:element name="implName" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAllWorkflowEngineInstancesResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="DatabaseProblemException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ForbiddenException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAllPublicValidatedImplementations">
+<xs:sequence>
+<xs:element name="extServiceId" type="xs:string" minOccurs="0" />
+<xs:element name="extUserId" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getAllPublicValidatedImplementationsResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:implShort" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="implShort">
+<xs:sequence>
+<xs:element name="description" type="xs:string" minOccurs="0" />
+<xs:element name="name" type="xs:string" minOccurs="0" />
+<xs:element name="selected" type="xs:boolean" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="UnauthorizedException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getLCParameters">
+<xs:sequence>
+<xs:element name="implName" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getLCParametersResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:parameter" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="parameter">
+<xs:sequence>
+<xs:element name="index" type="xs:int" />
+<xs:element name="value" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getBackendInstance">
+<xs:sequence>
+<xs:element name="implName" type="xs:string" minOccurs="0" />
+<xs:element name="engineInstance" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getBackendInstanceResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:beInstance" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="beInstance" abstract="true">
+<xs:sequence>
+<xs:element name="backendErrorOut" type="xs:string" minOccurs="0" />
+<xs:element name="backendInstName" type="xs:string" minOccurs="0" />
+<xs:element name="backendOutput" type="xs:string" minOccurs="0" />
+<xs:element name="idBackend" type="tns:backend" minOccurs="0" />
+<xs:element name="idBackendInst" type="xs:int" minOccurs="0" />
+<xs:element name="idOS" type="tns:operatingSystems" minOccurs="0" />
+<xs:element name="resource" type="xs:string" minOccurs="0" />
+<xs:element name="WEDev" type="tns:user" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="backend">
+<xs:sequence>
+<xs:element name="backendDesc" type="xs:string" minOccurs="0" />
+<xs:element name="backendName" type="xs:string" minOccurs="0" />
+<xs:element name="idBackend" type="xs:int" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="operatingSystems">
+<xs:sequence>
+<xs:element name="idOS" type="xs:int" minOccurs="0" />
+<xs:element name="name" type="xs:string" minOccurs="0" />
+<xs:element name="version" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="user">
+<xs:sequence>
+<xs:element name="email" type="xs:string" minOccurs="0" />
+<xs:element name="fullName" type="xs:string" minOccurs="0" />
+<xs:element name="loginName" type="xs:string" minOccurs="0" />
+<xs:element name="organization" type="xs:string" minOccurs="0" />
+<xs:element name="passHash" type="xs:string" minOccurs="0" />
+<xs:element name="user" type="xs:boolean" />
+<xs:element name="WEDev" type="xs:boolean" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="gLite">
+<xs:complexContent>
+<xs:extension base="tns:beInstance">
+<xs:sequence />
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="gt2">
+<xs:complexContent>
+<xs:extension base="tns:beInstance">
+<xs:sequence>
+<xs:element name="jobManager" type="xs:string" minOccurs="0" />
+<xs:element name="jobTypeId" type="tns:jobType" minOccurs="0" />
+<xs:element name="site" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="jobType">
+<xs:sequence>
+<xs:element name="jobTypeId" type="xs:int" minOccurs="0" />
+<xs:element name="jobTypeName" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="gt4">
+<xs:complexContent>
+<xs:extension base="tns:beInstance">
+<xs:sequence>
+<xs:element name="jobManager" type="xs:string" minOccurs="0" />
+<xs:element name="jobTypeId" type="tns:jobType" minOccurs="0" />
+<xs:element name="site" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="local">
+<xs:complexContent>
+<xs:extension base="tns:beInstance">
+<xs:sequence />
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="getFullWEIForJSDL">
+<xs:sequence>
+<xs:element name="engine" type="tns:engineData" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="engineData">
+<xs:sequence>
+<xs:element name="engineInstanceName" type="xs:string" minOccurs="0" />
+<xs:element name="engineName" type="xs:string" minOccurs="0" />
+<xs:element name="engineVersion" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getFullWEIForJSDLResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:workflowEngineInstance" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="workflowEngineInstance">
+<xs:sequence>
+<xs:element name="name" type="xs:string" minOccurs="0" />
+<xs:element name="workflowEngineName" type="xs:string" minOccurs="0" />
+<xs:element name="workflowEngineVersion" type="xs:string" minOccurs="0" />
+<xs:element name="prefixWorkflow" type="xs:string" minOccurs="0" />
+<xs:element name="deploymentConfig" type="tns:abstractDeployment" minOccurs="0" />
+<xs:element name="middlewareConfig" type="tns:beInstance" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="abstractDeployment" abstract="true">
+<xs:sequence />
+</xs:complexType>
+
+<xs:complexType name="preDeploy">
+<xs:complexContent>
+<xs:extension base="tns:abstractDeployment">
+<xs:sequence>
+<xs:element name="shellPathEndPoint" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="onTheFly">
+<xs:complexContent>
+<xs:extension base="tns:abstractDeployment">
+<xs:sequence>
+<xs:element name="shellName" type="xs:string" minOccurs="0" />
+<xs:element name="shellPath" type="xs:string" minOccurs="0" />
+<xs:element name="zipName" type="xs:string" minOccurs="0" />
+<xs:element name="zipPath" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="NotFoundException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getFullImplForJSDL">
+<xs:sequence>
+<xs:element name="implName" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getFullImplForJSDLResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:implJSDL" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="implJSDL">
+<xs:sequence>
+<xs:element name="appName" type="xs:string" minOccurs="0" />
+<xs:element name="definitionFileName" type="xs:string" minOccurs="0" />
+<xs:element name="definitionFilePath" type="xs:string" minOccurs="0" />
+<xs:element name="executionNode" type="tns:executionNode" minOccurs="0" />
+<xs:element name="implVersion" type="xs:string" minOccurs="0" />
+<xs:element name="workflowEngineName" type="xs:string" minOccurs="0" />
+<xs:element name="workflowEngineVersion" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="executionNode">
+<xs:sequence>
+<xs:element name="implFullName" type="xs:string" minOccurs="0" />
+<xs:element name="listInputs" type="tns:param" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="listOutputs" type="tns:param" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="param">
+<xs:sequence>
+<xs:element name="cmdLine" type="xs:boolean" />
+<xs:element name="defaultValue" type="xs:string" minOccurs="0" />
+<xs:element name="file" type="xs:boolean" />
+<xs:element name="fileName" type="xs:string" minOccurs="0" />
+<xs:element name="fixed" type="xs:boolean" />
+<xs:element name="input" type="xs:boolean" />
+<xs:element name="prefixCmd" type="xs:string" minOccurs="0" />
+<xs:element name="title" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

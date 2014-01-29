@@ -1,0 +1,364 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.3 (tags/2.3-7528; 2013-04-29T19:34:10+0000) JAXWS-RI/2.2.8 JAXWS/2.2 svn-revision#unknown. --><xs:schema xmlns:tns="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.0" targetNamespace="http://schemas.ggf.org/jsdl/2005/11/jsdl">
+
+<xs:element name="Application" type="tns:Application_Type"/>
+
+<xs:element name="ApplicationName" type="xs:string"/>
+
+<xs:element name="ApplicationVersion" type="xs:string"/>
+
+<xs:element name="CPUArchitecture" type="tns:CPUArchitecture_Type"/>
+
+<xs:element name="CPUArchitectureName" type="tns:ProcessorArchitectureEnumeration"/>
+
+<xs:element name="CandidateHosts" type="tns:CandidateHosts_Type"/>
+
+<xs:element name="CreationFlag" type="tns:CreationFlagEnumeration"/>
+
+<xs:element name="DataStaging" type="tns:DataStaging_Type"/>
+
+<xs:element name="DeleteOnTermination" type="xs:boolean"/>
+
+<xs:element name="Description" type="xs:string"/>
+
+<xs:element name="DiskSpace" type="tns:RangeValue_Type"/>
+
+<xs:element name="ExclusiveExecution" type="xs:boolean"/>
+
+<xs:element name="FileName" type="xs:string"/>
+
+<xs:element name="FileSystem" type="tns:FileSystem_Type"/>
+
+<xs:element name="FileSystemType" type="tns:FileSystemTypeEnumeration"/>
+
+<xs:element name="FilesystemName" type="xs:string"/>
+
+<xs:element name="HostName" type="xs:string"/>
+
+<xs:element name="IndividualCPUCount" type="tns:RangeValue_Type"/>
+
+<xs:element name="IndividualCPUSpeed" type="tns:RangeValue_Type"/>
+
+<xs:element name="IndividualCPUTime" type="tns:RangeValue_Type"/>
+
+<xs:element name="IndividualDiskSpace" type="tns:RangeValue_Type"/>
+
+<xs:element name="IndividualNetworkBandwidth" type="tns:RangeValue_Type"/>
+
+<xs:element name="IndividualPhysicalMemory" type="tns:RangeValue_Type"/>
+
+<xs:element name="IndividualVirtualMemory" type="tns:RangeValue_Type"/>
+
+<xs:element name="JobAnnotation" type="xs:string"/>
+
+<xs:element name="JobDefinition" type="tns:JobDefinition_Type"/>
+
+<xs:element name="JobDescription" type="tns:JobDescription_Type"/>
+
+<xs:element name="JobIdentification" type="tns:JobIdentification_Type"/>
+
+<xs:element name="JobName" type="xs:string"/>
+
+<xs:element name="JobProject" type="xs:string"/>
+
+<xs:element name="MountPoint" type="xs:string"/>
+
+<xs:element name="OperatingSystem" type="tns:OperatingSystem_Type"/>
+
+<xs:element name="OperatingSystemName" type="tns:OperatingSystemTypeEnumeration"/>
+
+<xs:element name="OperatingSystemType" type="tns:OperatingSystemType_Type"/>
+
+<xs:element name="OperatingSystemVersion" type="xs:string"/>
+
+<xs:element name="Resources" type="tns:Resources_Type"/>
+
+<xs:element name="Source" type="tns:SourceTarget_Type"/>
+
+<xs:element name="Target" type="tns:SourceTarget_Type"/>
+
+<xs:element name="TotalCPUCount" type="tns:RangeValue_Type"/>
+
+<xs:element name="TotalCPUTime" type="tns:RangeValue_Type"/>
+
+<xs:element name="TotalDiskSpace" type="tns:RangeValue_Type"/>
+
+<xs:element name="TotalPhysicalMemory" type="tns:RangeValue_Type"/>
+
+<xs:element name="TotalResourceCount" type="tns:RangeValue_Type"/>
+
+<xs:element name="TotalVirtualMemory" type="tns:RangeValue_Type"/>
+
+<xs:element name="URI" type="xs:string"/>
+
+<xs:complexType name="JobDefinition_Type">
+<xs:sequence>
+<xs:element name="JobDescription" type="tns:JobDescription_Type"/>
+<xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+<xs:attribute name="id" type="xs:ID"/>
+<xs:anyAttribute namespace="##other" processContents="skip"/>
+</xs:complexType>
+
+<xs:complexType name="JobDescription_Type">
+<xs:sequence>
+<xs:element name="JobIdentification" type="tns:JobIdentification_Type" minOccurs="0"/>
+<xs:element name="Application" type="tns:Application_Type" minOccurs="0"/>
+<xs:element name="Resources" type="tns:Resources_Type" minOccurs="0"/>
+<xs:element name="DataStaging" type="tns:DataStaging_Type" minOccurs="0" maxOccurs="unbounded"/>
+<xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+<xs:anyAttribute namespace="##other" processContents="skip"/>
+</xs:complexType>
+
+<xs:complexType name="JobIdentification_Type">
+<xs:sequence>
+<xs:element name="JobName" type="xs:string" minOccurs="0"/>
+<xs:element name="Description" type="xs:string" minOccurs="0"/>
+<xs:element name="JobAnnotation" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="JobProject" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+<xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+<xs:anyAttribute namespace="##other" processContents="skip"/>
+</xs:complexType>
+
+<xs:complexType name="Exact_Type">
+<xs:simpleContent>
+<xs:extension base="xs:double">
+<xs:attribute name="epsilon" type="xs:double"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="SourceTarget_Type">
+<xs:sequence>
+<xs:element name="URI" type="xs:anyURI" minOccurs="0"/>
+<xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+<xs:anyAttribute namespace="##other" processContents="skip"/>
+</xs:complexType>
+
+<xs:complexType name="RangeValue_Type">
+<xs:sequence>
+<xs:element name="UpperBoundedRange" type="tns:Boundary_Type" minOccurs="0"/>
+<xs:element name="LowerBoundedRange" type="tns:Boundary_Type" minOccurs="0"/>
+<xs:element name="Exact" type="tns:Exact_Type" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="Range" type="tns:Range_Type" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+<xs:anyAttribute namespace="##other" processContents="skip"/>
+</xs:complexType>
+
+<xs:complexType name="Boundary_Type">
+<xs:simpleContent>
+<xs:extension base="xs:double">
+<xs:attribute name="exclusiveBound" type="xs:boolean"/>
+</xs:extension>
+</xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="Range_Type">
+<xs:sequence>
+<xs:element name="LowerBound" type="tns:Boundary_Type"/>
+<xs:element name="UpperBound" type="tns:Boundary_Type"/>
+</xs:sequence>
+<xs:anyAttribute namespace="##other" processContents="skip"/>
+</xs:complexType>
+
+<xs:complexType name="Resources_Type">
+<xs:sequence>
+<xs:element name="CandidateHosts" type="tns:CandidateHosts_Type" minOccurs="0"/>
+<xs:element name="FileSystem" type="tns:FileSystem_Type" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="ExclusiveExecution" type="xs:boolean" minOccurs="0"/>
+<xs:element name="OperatingSystem" type="tns:OperatingSystem_Type" minOccurs="0"/>
+<xs:element name="CPUArchitecture" type="tns:CPUArchitecture_Type" minOccurs="0"/>
+<xs:element name="IndividualCPUSpeed" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:element name="IndividualCPUTime" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:element name="IndividualCPUCount" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:element name="IndividualNetworkBandwidth" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:element name="IndividualPhysicalMemory" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:element name="IndividualVirtualMemory" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:element name="IndividualDiskSpace" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:element name="TotalCPUTime" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:element name="TotalCPUCount" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:element name="TotalPhysicalMemory" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:element name="TotalVirtualMemory" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:element name="TotalDiskSpace" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:element name="TotalResourceCount" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+<xs:anyAttribute namespace="##other" processContents="skip"/>
+</xs:complexType>
+
+<xs:complexType name="CandidateHosts_Type">
+<xs:sequence>
+<xs:element name="HostName" type="xs:string" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="FileSystem_Type">
+<xs:sequence>
+<xs:element name="FileSystemType" type="tns:FileSystemTypeEnumeration" minOccurs="0"/>
+<xs:element name="Description" type="xs:string" minOccurs="0"/>
+<xs:element name="MountPoint" type="xs:string" minOccurs="0"/>
+<xs:element name="DiskSpace" type="tns:RangeValue_Type" minOccurs="0"/>
+<xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+<xs:attribute name="name" type="xs:NCName" use="required"/>
+<xs:anyAttribute namespace="##other" processContents="skip"/>
+</xs:complexType>
+
+<xs:complexType name="OperatingSystem_Type">
+<xs:sequence>
+<xs:element name="OperatingSystemType" type="tns:OperatingSystemType_Type" minOccurs="0"/>
+<xs:element name="OperatingSystemVersion" type="xs:string" minOccurs="0"/>
+<xs:element name="Description" type="xs:string" minOccurs="0"/>
+<xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+<xs:anyAttribute namespace="##other" processContents="skip"/>
+</xs:complexType>
+
+<xs:complexType name="OperatingSystemType_Type">
+<xs:sequence>
+<xs:element name="OperatingSystemName" type="tns:OperatingSystemTypeEnumeration"/>
+<xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+<xs:anyAttribute namespace="##other" processContents="skip"/>
+</xs:complexType>
+
+<xs:complexType name="CPUArchitecture_Type">
+<xs:sequence>
+<xs:element name="CPUArchitectureName" type="tns:ProcessorArchitectureEnumeration"/>
+<xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+<xs:anyAttribute namespace="##other" processContents="skip"/>
+</xs:complexType>
+
+<xs:complexType name="DataStaging_Type">
+<xs:sequence>
+<xs:element name="FileName" type="xs:string"/>
+<xs:element name="FilesystemName" type="xs:NCName" minOccurs="0"/>
+<xs:element name="CreationFlag" type="tns:CreationFlagEnumeration"/>
+<xs:element name="DeleteOnTermination" type="xs:boolean" minOccurs="0"/>
+<xs:element name="Source" type="tns:SourceTarget_Type" minOccurs="0"/>
+<xs:element name="Target" type="tns:SourceTarget_Type" minOccurs="0"/>
+<xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+<xs:attribute name="name" type="xs:NCName"/>
+<xs:anyAttribute namespace="##other" processContents="skip"/>
+</xs:complexType>
+
+<xs:complexType name="Application_Type">
+<xs:sequence>
+<xs:element name="ApplicationName" type="xs:string" minOccurs="0"/>
+<xs:element name="ApplicationVersion" type="xs:string" minOccurs="0"/>
+<xs:element name="Description" type="xs:string" minOccurs="0"/>
+<xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+<xs:anyAttribute namespace="##other" processContents="skip"/>
+</xs:complexType>
+
+<xs:simpleType name="FileSystemTypeEnumeration">
+<xs:restriction base="xs:string">
+<xs:enumeration value="swap"/>
+<xs:enumeration value="temporary"/>
+<xs:enumeration value="spool"/>
+<xs:enumeration value="normal"/>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="OperatingSystemTypeEnumeration">
+<xs:restriction base="xs:string">
+<xs:enumeration value="Unknown"/>
+<xs:enumeration value="MACOS"/>
+<xs:enumeration value="ATTUNIX"/>
+<xs:enumeration value="DGUX"/>
+<xs:enumeration value="DECNT"/>
+<xs:enumeration value="Tru64_UNIX"/>
+<xs:enumeration value="OpenVMS"/>
+<xs:enumeration value="HPUX"/>
+<xs:enumeration value="AIX"/>
+<xs:enumeration value="MVS"/>
+<xs:enumeration value="OS400"/>
+<xs:enumeration value="OS_2"/>
+<xs:enumeration value="JavaVM"/>
+<xs:enumeration value="MSDOS"/>
+<xs:enumeration value="WIN3x"/>
+<xs:enumeration value="WIN95"/>
+<xs:enumeration value="WIN98"/>
+<xs:enumeration value="WINNT"/>
+<xs:enumeration value="WINCE"/>
+<xs:enumeration value="NCR3000"/>
+<xs:enumeration value="NetWare"/>
+<xs:enumeration value="OSF"/>
+<xs:enumeration value="DC_OS"/>
+<xs:enumeration value="Reliant_UNIX"/>
+<xs:enumeration value="SCO_UnixWare"/>
+<xs:enumeration value="SCO_OpenServer"/>
+<xs:enumeration value="Sequent"/>
+<xs:enumeration value="IRIX"/>
+<xs:enumeration value="Solaris"/>
+<xs:enumeration value="SunOS"/>
+<xs:enumeration value="U6000"/>
+<xs:enumeration value="ASERIES"/>
+<xs:enumeration value="TandemNSK"/>
+<xs:enumeration value="TandemNT"/>
+<xs:enumeration value="BS2000"/>
+<xs:enumeration value="LINUX"/>
+<xs:enumeration value="Lynx"/>
+<xs:enumeration value="XENIX"/>
+<xs:enumeration value="VM"/>
+<xs:enumeration value="Interactive_UNIX"/>
+<xs:enumeration value="BSDUNIX"/>
+<xs:enumeration value="FreeBSD"/>
+<xs:enumeration value="NetBSD"/>
+<xs:enumeration value="GNU_Hurd"/>
+<xs:enumeration value="OS9"/>
+<xs:enumeration value="MACH_Kernel"/>
+<xs:enumeration value="Inferno"/>
+<xs:enumeration value="QNX"/>
+<xs:enumeration value="EPOC"/>
+<xs:enumeration value="IxWorks"/>
+<xs:enumeration value="VxWorks"/>
+<xs:enumeration value="MiNT"/>
+<xs:enumeration value="BeOS"/>
+<xs:enumeration value="HP_MPE"/>
+<xs:enumeration value="NextStep"/>
+<xs:enumeration value="PalmPilot"/>
+<xs:enumeration value="Rhapsody"/>
+<xs:enumeration value="Windows_2000"/>
+<xs:enumeration value="Dedicated"/>
+<xs:enumeration value="OS_390"/>
+<xs:enumeration value="VSE"/>
+<xs:enumeration value="TPF"/>
+<xs:enumeration value="Windows_R_Me"/>
+<xs:enumeration value="Caldera_Open_UNIX"/>
+<xs:enumeration value="OpenBSD"/>
+<xs:enumeration value="Not_Applicable"/>
+<xs:enumeration value="Windows_XP"/>
+<xs:enumeration value="z_OS"/>
+<xs:enumeration value="other"/>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="ProcessorArchitectureEnumeration">
+<xs:restriction base="xs:string">
+<xs:enumeration value="sparc"/>
+<xs:enumeration value="powerpc"/>
+<xs:enumeration value="x86"/>
+<xs:enumeration value="x86_32"/>
+<xs:enumeration value="x86_64"/>
+<xs:enumeration value="parisc"/>
+<xs:enumeration value="mips"/>
+<xs:enumeration value="ia64"/>
+<xs:enumeration value="arm"/>
+<xs:enumeration value="other"/>
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="CreationFlagEnumeration">
+<xs:restriction base="xs:string">
+<xs:enumeration value="overwrite"/>
+<xs:enumeration value="append"/>
+<xs:enumeration value="dontOverwrite"/>
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>

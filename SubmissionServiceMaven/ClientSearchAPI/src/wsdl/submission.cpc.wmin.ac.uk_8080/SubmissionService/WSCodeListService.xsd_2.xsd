@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.3 (tags/2.3-7528; 2013-04-29T19:34:10+0000) JAXWS-RI/2.2.8 JAXWS/2.2 svn-revision#unknown. --><xs:schema xmlns:tns="http://interfaces.frontend.submission.cpc.wmin.ac.uk/" xmlns:ns1="http://interfaces.submission.repository.shiwa.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://interfaces.frontend.submission.cpc.wmin.ac.uk/">
+
+<xs:import namespace="http://interfaces.submission.repository.shiwa.org/" schemaLocation="http://submission.cpc.wmin.ac.uk:8080/SubmissionService/WSCodeListService?xsd=1"/>
+
+<xs:element name="IllegalParameterException" type="tns:IllegalParameterException"/>
+
+<xs:element name="RepositoryCommunicationException" type="tns:RepositoryCommunicationException"/>
+
+<xs:element name="getExecutorSiteConfiguration" type="tns:getExecutorSiteConfiguration"/>
+
+<xs:element name="getExecutorSiteConfigurationResponse" type="tns:getExecutorSiteConfigurationResponse"/>
+
+<xs:element name="getExecutorSites" type="tns:getExecutorSites"/>
+
+<xs:element name="getExecutorSitesResponse" type="tns:getExecutorSitesResponse"/>
+
+<xs:element name="getLCIDs" type="tns:getLCIDs"/>
+
+<xs:element name="getLCIDsResponse" type="tns:getLCIDsResponse"/>
+
+<xs:element name="getLCParameters" type="tns:getLCParameters"/>
+
+<xs:element name="getLCParametersResponse" type="tns:getLCParametersResponse"/>
+
+<xs:complexType name="getExecutorSites">
+<xs:sequence>
+<xs:element name="urlRepository" type="xs:string" minOccurs="0"/>
+<xs:element name="lcid" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getExecutorSitesResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="IllegalParameterException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="RepositoryCommunicationException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getLCIDs">
+<xs:sequence>
+<xs:element name="userAccess" type="tns:userAccessConfig" minOccurs="0"/>
+<xs:element name="urlRepository" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="userAccessConfig">
+<xs:sequence>
+<xs:element name="extServiceId" type="xs:string" minOccurs="0"/>
+<xs:element name="extUserId" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getLCIDsResponse">
+<xs:sequence>
+<xs:element name="return" type="ns1:implShort" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getExecutorSiteConfiguration">
+<xs:sequence>
+<xs:element name="urlRepository" type="xs:string" minOccurs="0"/>
+<xs:element name="implName" type="xs:string" minOccurs="0"/>
+<xs:element name="siteName" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getExecutorSiteConfigurationResponse">
+<xs:sequence>
+<xs:element name="return" type="ns1:beInstance" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getLCParameters">
+<xs:sequence>
+<xs:element name="urlRepository" type="xs:string" minOccurs="0"/>
+<xs:element name="lcid" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getLCParametersResponse">
+<xs:sequence>
+<xs:element name="return" type="ns1:parameter" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

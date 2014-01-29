@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://submission.cpc.wmin.ac.uk:8080/SubmissionService/WSCodeListService?wsdl" uri="wsdl/submission.cpc.wmin.ac.uk_8080/SubmissionService/WSCodeListService.wsdl"/>
+    <system systemId="http://submission.cpc.wmin.ac.uk:8080/SubmissionService/WSCodeListService?wsdl=1" uri="wsdl/submission.cpc.wmin.ac.uk_8080/SubmissionService/WSCodeListService.wsdl_1.wsdl"/>
+    <system systemId="http://submission.cpc.wmin.ac.uk:8080/SubmissionService/WSCodeListService?xsd=1" uri="wsdl/submission.cpc.wmin.ac.uk_8080/SubmissionService/WSCodeListService.xsd_1.xsd"/>
+    <system systemId="http://submission.cpc.wmin.ac.uk:8080/SubmissionService/WSCodeListService?xsd=2" uri="wsdl/submission.cpc.wmin.ac.uk_8080/SubmissionService/WSCodeListService.xsd_2.xsd"/>
+</catalog>
