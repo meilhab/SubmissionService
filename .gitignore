@@ -4,3 +4,6 @@
 *.jar
 *.war
 *.ear
+/SubmissionServiceMaven/SubmissionService/target/
+/SubmissionServiceMaven/ClientSearchAPI/target/
+/SubmissionServiceMaven/ClientDCIBridgeAPI/target/
