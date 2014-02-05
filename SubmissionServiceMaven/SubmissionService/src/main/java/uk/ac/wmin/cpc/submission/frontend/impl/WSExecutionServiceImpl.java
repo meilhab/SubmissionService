@@ -23,7 +23,6 @@ import uk.ac.wmin.cpc.submission.exceptions.ExecutionException;
 import uk.ac.wmin.cpc.submission.exceptions.FileManagementException;
 import uk.ac.wmin.cpc.submission.exceptions.WrongJSDLException;
 import uk.ac.wmin.cpc.submission.frontend.servlets.LoggerServlet;
-import uk.ac.wmin.cpc.submission.frontend.helpers.ServiceTools;
 import uk.ac.wmin.cpc.submission.frontend.interfaces.WSExecutionService;
 import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.exceptions.RepositoryCommunicationException;
@@ -46,18 +45,14 @@ public class WSExecutionServiceImpl implements WSExecutionService {
             JobDefinitionType jsdl)
             throws WrongJSDLException, IllegalParameterException,
             RepositoryCommunicationException, FileManagementException {
-        ServiceTools.checkParam(jsdl);
-
         if (logger.isDebugEnabled()) {
             logger.debug("START: modifyJSDLFile");
             logger.debug("RepoURL: " + (urlRepository == null || urlRepository.isEmpty()
                     ? "default" : urlRepository));
         }
 
-        RepositoryWSAccess repository = (urlRepository == null || urlRepository.isEmpty()
-                ? new RepositoryWSAccess() : new RepositoryWSAccess(urlRepository));
-
         try {
+            RepositoryWSAccess repository = new RepositoryWSAccess(urlRepository);
             JSDLModificator creator = new JSDLModificator(repository, jsdl);
             return creator.generateNewJSDL();
         } catch (IllegalArgumentException | JAXBException | NotFoundException |

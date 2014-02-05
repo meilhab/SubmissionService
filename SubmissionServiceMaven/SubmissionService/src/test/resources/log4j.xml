@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%c{1}] %-5p - %m %n"/>
+        </layout>
+    </appender>
+    <appender name="managers" class="org.apache.log4j.FileAppender">
+        <param name="File" value="${my.log4j.submission}/managers.out"/>
+        <param name="Append" value="true"/>
+        <param name="ImmediateFlush" value="true"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%c{1}] %-5p - %m %n"/>
+        </layout>
+    </appender>
+    <appender name="codeListService" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="${my.log4j.submission}/codeListService.log"/>
+        <param name="Append" value="true"/>
+        <param name="ImmediateFlush" value="true"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%c{1}] (%F) %-5p - %m %n"/>
+        </layout>
+    </appender>
+    <appender name="executionService" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="${my.log4j.submission}/executionService.log"/>
+        <param name="Append" value="true"/>
+        <param name="ImmediateFlush" value="true"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%c{1}] (%F) %-5p - %m %n"/>
+        </layout>
+    </appender>
+    <logger name="LoggersManager">
+        <level value="DEBUG"/>
+        <appender-ref ref="managers"/>
+    </logger>
+    <logger name="uk.ac.wmin.cpc.submission.frontend.impl.WSCodeListServiceImpl">
+        <level value="DEBUG"/>
+        <appender-ref ref="codeListService"/>
+    </logger>
+    <logger name="uk.ac.wmin.cpc.submission.frontend.impl.WSExecutionServiceImpl">
+        <level value="DEBUG"/>
+        <appender-ref ref="executionService"/>
+    </logger>
+    <root>
+        <level value="DEBUG"/>
+        <appender-ref ref="console"/>
+    </root>
+</log4j:configuration>

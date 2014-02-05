@@ -18,7 +18,6 @@ import uk.ac.wmin.cpc.submission.exceptions.ExceptionsManager;
 import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.exceptions.RepositoryCommunicationException;
 import uk.ac.wmin.cpc.submission.frontend.servlets.LoggerServlet;
-import uk.ac.wmin.cpc.submission.frontend.helpers.ServiceTools;
 import uk.ac.wmin.cpc.submission.frontend.interfaces.WSCodeListService;
 import uk.ac.wmin.cpc.submission.frontend.transferobjects.UserAccessConfig;
 import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
@@ -33,24 +32,19 @@ import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
 public class WSCodeListServiceImpl implements WSCodeListService {
 
     private static Logger logger = LoggerServlet.getLogger(1);
-    private RepositoryWSAccess repository;
 
     @Override
     public ImplShort[] getLCIDs(UserAccessConfig userAccess, String urlRepository)
             throws IllegalParameterException, RepositoryCommunicationException {
-        ServiceTools.checkParam(userAccess);
         logger.info("START: getLCIDs");
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Name: " + userAccess.getExtServiceId());
             logger.debug("RepoURL: " + (urlRepository == null || urlRepository.isEmpty()
                     ? "default" : urlRepository));
         }
 
-        repository = (urlRepository == null || urlRepository.isEmpty()
-                ? new RepositoryWSAccess() : new RepositoryWSAccess(urlRepository));
-
         try {
+            RepositoryWSAccess repository = new RepositoryWSAccess(urlRepository);
             ImplShort[] responses =
                     repository.getAllPublicValidatedImplementations(userAccess);
             return responses;
@@ -65,7 +59,6 @@ public class WSCodeListServiceImpl implements WSCodeListService {
     @Override
     public String[] getExecutorSites(String urlRepository, String lcid)
             throws IllegalParameterException, RepositoryCommunicationException {
-        ServiceTools.checkParam(lcid);
         logger.info("START: getExecutorSites for: " + lcid);
 
         if (logger.isDebugEnabled()) {
@@ -73,12 +66,9 @@ public class WSCodeListServiceImpl implements WSCodeListService {
                     ? "default" : urlRepository));
         }
 
-        repository = (urlRepository == null || urlRepository.isEmpty()
-                ? new RepositoryWSAccess() : new RepositoryWSAccess(urlRepository));
-
         try {
-            String[] responses =
-                    repository.getAllWorkflowEngineInstances(lcid);
+            RepositoryWSAccess repository = new RepositoryWSAccess(urlRepository);
+            String[] responses = repository.getAllWorkflowEngineInstances(lcid);
             return responses;
         } catch (DatabaseProblemException | ForbiddenException | IOException ex) {
             ExceptionsManager.manageExceptionsCodeListService(ex, logger);
@@ -90,7 +80,6 @@ public class WSCodeListServiceImpl implements WSCodeListService {
     @Override
     public Parameter[] getLCParameters(String urlRepository, String lcid)
             throws IllegalParameterException, RepositoryCommunicationException {
-        ServiceTools.checkParam(lcid);
         logger.info("START: getLCParameters for: " + lcid);
 
         if (logger.isDebugEnabled()) {
@@ -98,12 +87,9 @@ public class WSCodeListServiceImpl implements WSCodeListService {
                     ? "default" : urlRepository));
         }
 
-        repository = (urlRepository == null || urlRepository.isEmpty()
-                ? new RepositoryWSAccess() : new RepositoryWSAccess(urlRepository));
-
         try {
-            Parameter[] responses =
-                    repository.getAllParameters(lcid);
+            RepositoryWSAccess repository = new RepositoryWSAccess(urlRepository);
+            Parameter[] responses = repository.getAllParameters(lcid);
             return responses;
         } catch (DatabaseProblemException | ForbiddenException | IOException ex) {
             ExceptionsManager.manageExceptionsCodeListService(ex, logger);
@@ -116,7 +102,6 @@ public class WSCodeListServiceImpl implements WSCodeListService {
     public BeInstance getExecutorSiteConfiguration(String urlRepository, String implName,
             String siteName)
             throws IllegalParameterException, RepositoryCommunicationException {
-        ServiceTools.checkParam(siteName);
         logger.info("START: getExecutorSiteConfiguration for: " + implName);
         logger.info("Using: " + siteName);
 
@@ -125,11 +110,8 @@ public class WSCodeListServiceImpl implements WSCodeListService {
                     ? "default" : urlRepository));
         }
 
-
-        repository = (urlRepository == null || urlRepository.isEmpty()
-                ? new RepositoryWSAccess() : new RepositoryWSAccess(urlRepository));
-
         try {
+            RepositoryWSAccess repository = new RepositoryWSAccess(urlRepository);
             return repository.getBackendInstance(implName, siteName);
         } catch (NotFoundException | DatabaseProblemException |
                 ForbiddenException | IOException ex) {

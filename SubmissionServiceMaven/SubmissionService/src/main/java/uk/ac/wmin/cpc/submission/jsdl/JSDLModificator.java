@@ -26,7 +26,9 @@ import org.shiwa.repository.submission.interfaces.WorkflowEngineInstance;
 import org.shiwa.repository.submission.service.DatabaseProblemException;
 import org.shiwa.repository.submission.service.ForbiddenException;
 import org.shiwa.repository.submission.service.NotFoundException;
+import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.frontend.helpers.Configuration;
+import uk.ac.wmin.cpc.submission.frontend.helpers.ServiceTools;
 import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
 import uri.mbschedulingdescriptionlanguage.DCINameEnumeration;
 
@@ -42,7 +44,8 @@ public class JSDLModificator {
     private JSDLItem newJSDL;
 
     public JSDLModificator(RepositoryWSAccess repository, JobDefinitionType jsdl)
-            throws IllegalArgumentException, JAXBException {
+            throws IllegalArgumentException, JAXBException, IllegalParameterException {
+        ServiceTools.checkParam(repository, jsdl);
         this.repository = repository;
         this.newJSDL = new JSDLItem(jsdl);
         this.extractor = quickCheckJSDL(jsdl);
@@ -51,7 +54,7 @@ public class JSDLModificator {
     public JobDefinitionType generateNewJSDL()
             throws JAXBException, MalformedURLException, NotFoundException,
             IllegalArgumentException, DatabaseProblemException,
-            ForbiddenException, IOException {
+            ForbiddenException, IOException, IllegalParameterException {
         // TODO: continue this function
         // getDataFromRepository()  -> get all data to exploit them             OK
         // modifyPOSIXApplication() -> add executable and arguments?            OK
@@ -91,7 +94,8 @@ public class JSDLModificator {
 
     private ImplJSDL getFullImplementation(String implName)
             throws MalformedURLException, NotFoundException,
-            DatabaseProblemException, ForbiddenException, IOException {
+            DatabaseProblemException, ForbiddenException, IOException,
+            IllegalParameterException {
         // good way could be to call the service or using the client interface
         // but possibility of conflicts when deployment
         logger.info("Getting " + implName + " from repository");
@@ -101,7 +105,8 @@ public class JSDLModificator {
     private WorkflowEngineInstance getFullWorkflowEngineInstance(String engineName,
             String engineVersion, String instanceName)
             throws MalformedURLException, NotFoundException,
-            DatabaseProblemException, ForbiddenException, IOException {
+            DatabaseProblemException, ForbiddenException, IOException,
+            IllegalParameterException {
         logger.info("Getting " + instanceName + " from repository");
         return repository.getFullWEIForJSDL(engineName, engineVersion, instanceName);
     }
@@ -129,7 +134,8 @@ public class JSDLModificator {
     private void modifyPOSIXApplicationAndDataStaging(ImplJSDL implementation,
             WorkflowEngineInstance engineInstance) throws MalformedURLException,
             NotFoundException, IllegalArgumentException,
-            IOException, DatabaseProblemException, ForbiddenException {
+            IOException, DatabaseProblemException, ForbiddenException,
+            IllegalParameterException {
         logger.info("Modification POSIXApplication JSDL");
         // checking params
         Parameter[] params = checkInputOutputs(implementation);
@@ -151,7 +157,8 @@ public class JSDLModificator {
 
     private Parameter[] checkInputOutputs(ImplJSDL implementation)
             throws MalformedURLException, NotFoundException, ForbiddenException,
-            IllegalArgumentException, DatabaseProblemException, IOException {
+            IllegalArgumentException, DatabaseProblemException, IOException,
+            IllegalParameterException {
         if (logger.isDebugEnabled()) {
             logger.debug("Checking Inputs/Outputs data JSDL");
         }

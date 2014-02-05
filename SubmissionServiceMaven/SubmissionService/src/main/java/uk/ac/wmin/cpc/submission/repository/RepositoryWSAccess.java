@@ -22,8 +22,10 @@ import org.shiwa.repository.submission.service.NotFoundException;
 import org.shiwa.repository.submission.service.SubmissionService;
 import org.shiwa.repository.submission.service.SubmissionService_Service;
 import org.shiwa.repository.submission.service.UnauthorizedException;
+import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.frontend.helpers.Configuration;
 import uk.ac.wmin.cpc.submission.frontend.helpers.LogText;
+import uk.ac.wmin.cpc.submission.frontend.helpers.ServiceTools;
 import uk.ac.wmin.cpc.submission.frontend.servlets.LoggerServlet;
 import uk.ac.wmin.cpc.submission.frontend.transferobjects.UserAccessConfig;
 
@@ -39,11 +41,18 @@ public class RepositoryWSAccess {
     private LogText logger = new LogText("REPOSITORYConnection",
             LoggerServlet.getLogger(2));
 
-    public RepositoryWSAccess() {
+    public RepositoryWSAccess() throws MalformedURLException {
         this(Configuration.getDefaultRepository());
     }
 
-    public RepositoryWSAccess(String urlRepository) {
+    public RepositoryWSAccess(String urlRepository) throws MalformedURLException {
+        if (urlRepository == null || urlRepository.isEmpty()) {
+            if ((urlRepository = Configuration.getDefaultRepository()) == null
+                    || urlRepository.isEmpty()) {
+                throw new MalformedURLException("Wrong repository URL");
+            }
+        }
+
         serviceLocation = (urlRepository.endsWith("/")
                 ? urlRepository : urlRepository + "/") + WSDL_LOCATION;
     }
@@ -72,11 +81,13 @@ public class RepositoryWSAccess {
 
     public ImplShort[] getAllPublicValidatedImplementations(UserAccessConfig userAccess)
             throws MalformedURLException, UnauthorizedException,
-            DatabaseProblemException, ForbiddenException, IOException {
+            DatabaseProblemException, ForbiddenException, IOException,
+            IllegalParameterException {
         if (logger.isDebugEnabled()) {
             logger.log(Level.DEBUG, "getAllPublicValidatedImplementations");
         }
 
+        ServiceTools.checkUserAccessConfig(userAccess);
         SubmissionService portService = getConnectionToService();
         List<ImplShort> listImplShort =
                 portService.getAllPublicValidatedImplementations(
@@ -92,12 +103,13 @@ public class RepositoryWSAccess {
 
     public String[] getAllWorkflowEngineInstances(String implName)
             throws MalformedURLException, DatabaseProblemException,
-            ForbiddenException, IOException {
+            ForbiddenException, IOException, IllegalParameterException {
         if (logger.isDebugEnabled()) {
             logger.log(Level.DEBUG, "getAllWorkflowEngineInstances");
             logger.log(Level.DEBUG, "Implementation (" + implName + ")");
         }
 
+        ServiceTools.checkParam(implName);
         SubmissionService portService = getConnectionToService();
         List<String> listInstances = portService.
                 getAllWorkflowEngineInstances(implName);
@@ -112,12 +124,13 @@ public class RepositoryWSAccess {
 
     public Parameter[] getAllParameters(String implName)
             throws MalformedURLException, DatabaseProblemException,
-            ForbiddenException, IOException {
+            ForbiddenException, IOException, IllegalParameterException {
         if (logger.isDebugEnabled()) {
             logger.log(Level.DEBUG, "getAllParameters");
             logger.log(Level.DEBUG, "Implementation (" + implName + ")");
         }
 
+        ServiceTools.checkParam(implName);
         SubmissionService portService = getConnectionToService();
         List<Parameter> listParams = portService.getLCParameters(implName);
 
@@ -131,12 +144,13 @@ public class RepositoryWSAccess {
 
     public ImplJSDL getFullImplJSDL(String implName)
             throws MalformedURLException, NotFoundException,
-            DatabaseProblemException, ForbiddenException, IOException {
+            DatabaseProblemException, ForbiddenException, IOException, IllegalParameterException {
         if (logger.isDebugEnabled()) {
             logger.log(Level.DEBUG, "getFullImplJSDL");
             logger.log(Level.DEBUG, "Implementation (" + implName + ")");
         }
 
+        ServiceTools.checkParam(implName);
         SubmissionService portService = getConnectionToService();
         ImplJSDL implementation = portService.getFullImplForJSDL(implName);
 
@@ -151,7 +165,8 @@ public class RepositoryWSAccess {
     public WorkflowEngineInstance getFullWEIForJSDL(String engineName,
             String engineVersion, String instanceName)
             throws MalformedURLException, NotFoundException,
-            DatabaseProblemException, ForbiddenException, IOException {
+            DatabaseProblemException, ForbiddenException, IOException,
+            IllegalParameterException {
         if (logger.isDebugEnabled()) {
             logger.log(Level.DEBUG, "getFullWEIForJSDL");
             logger.log(Level.DEBUG, "Workflow engine (" + engineName + ")");
@@ -159,6 +174,7 @@ public class RepositoryWSAccess {
             logger.log(Level.DEBUG, "Instance (" + instanceName + ")");
         }
 
+        ServiceTools.checkParam(engineName, engineVersion, instanceName);
         EngineData engine = new EngineData();
         engine.setEngineName(engineName);
         engine.setEngineVersion(engineVersion);
@@ -177,13 +193,15 @@ public class RepositoryWSAccess {
 
     public BeInstance getBackendInstance(String implName, String instanceName)
             throws MalformedURLException, NotFoundException,
-            DatabaseProblemException, ForbiddenException, IOException {
+            DatabaseProblemException, ForbiddenException, IOException,
+            IllegalParameterException {
         if (logger.isDebugEnabled()) {
             logger.log(Level.DEBUG, "getBackendInstance");
             logger.log(Level.DEBUG, "Implementation name (" + implName + ")");
             logger.log(Level.DEBUG, "Instance (" + instanceName + ")");
         }
 
+        ServiceTools.checkParam(implName, instanceName);
         SubmissionService portService = getConnectionToService();
         BeInstance instance = portService.
                 getBackendInstance(implName, instanceName);

@@ -17,7 +17,7 @@ public class ServiceTools {
 
     public static void checkParam(Object... data)
             throws IllegalParameterException {
-        Logger logger = LoggerServlet.getLogger(2);
+        Logger logger = LoggerServlet.getLogger(4);
 
         for (Object object : data) {
             if (object == null
@@ -31,7 +31,7 @@ public class ServiceTools {
 
     public static void checkUserAccessConfig(UserAccessConfig userAccessConfig)
             throws IllegalParameterException {
-        Logger logger = LoggerServlet.getLogger(2);
+        Logger logger = LoggerServlet.getLogger(4);
 
         if (userAccessConfig == null) {
             logger.error("No user data given");
@@ -47,7 +47,7 @@ public class ServiceTools {
                     + "(serviceId)");
         }
 
-        if (extUserId.isEmpty() || extUserId.isEmpty()) {
+        if (extUserId == null || extUserId.isEmpty()) {
             logger.error("Null or empty userId detected");
             throw new IllegalParameterException("Null or empty parameter detected "
                     + "(userId)");
