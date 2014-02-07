@@ -36,7 +36,7 @@
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.3</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>uk.ac.wmin.cpc</groupId>
@@ -72,19 +72,19 @@
             <groupId>uk.ac.wmin.cpc</groupId>
             <artifactId>resources</artifactId>
             <version>3.6.1v3</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>uk.ac.wmin.cpc</groupId>
             <artifactId>dcibridge_cli</artifactId>
             <version>3.6.1</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>uk.ac.wmin.cpc</groupId>
             <artifactId>information_cli</artifactId>
             <version>3.6.1</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>

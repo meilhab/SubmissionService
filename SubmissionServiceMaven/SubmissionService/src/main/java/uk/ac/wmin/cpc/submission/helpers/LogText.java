@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uk.ac.wmin.cpc.submission.frontend.helpers;
+package uk.ac.wmin.cpc.submission.helpers;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;

@@ -24,8 +24,8 @@ import org.shiwa.repository.submission.service.SubmissionService_Service;
 import org.shiwa.repository.submission.service.UnauthorizedException;
 import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.frontend.helpers.Configuration;
-import uk.ac.wmin.cpc.submission.frontend.helpers.LogText;
-import uk.ac.wmin.cpc.submission.frontend.helpers.ServiceTools;
+import uk.ac.wmin.cpc.submission.helpers.LogText;
+import uk.ac.wmin.cpc.submission.helpers.ServiceTools;
 import uk.ac.wmin.cpc.submission.frontend.servlets.LoggerServlet;
 import uk.ac.wmin.cpc.submission.frontend.transferobjects.UserAccessConfig;
 

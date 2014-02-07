@@ -28,7 +28,7 @@ import org.shiwa.repository.submission.service.ForbiddenException;
 import org.shiwa.repository.submission.service.NotFoundException;
 import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.frontend.helpers.Configuration;
-import uk.ac.wmin.cpc.submission.frontend.helpers.ServiceTools;
+import uk.ac.wmin.cpc.submission.helpers.ServiceTools;
 import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
 import uri.mbschedulingdescriptionlanguage.DCINameEnumeration;
 

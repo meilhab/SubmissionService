@@ -13,7 +13,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import uk.ac.wmin.cpc.submission.frontend.helpers.LogText;
+import uk.ac.wmin.cpc.submission.helpers.LogText;
 
 /**
  *
