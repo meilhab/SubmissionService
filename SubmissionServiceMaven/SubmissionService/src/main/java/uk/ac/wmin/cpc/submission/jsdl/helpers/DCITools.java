@@ -58,20 +58,6 @@ public class DCITools {
         }
 
         switch (dciName.toLowerCase()) {
-            case "arc":
-                return DCINameEnumeration.ARC;
-            case "axis":
-                return DCINameEnumeration.SERVICE;
-            case "boinc":
-                return DCINameEnumeration.BOINC;
-            case "cloudbroker":
-                return DCINameEnumeration.CLOUDBROKER;
-            case "edgi":
-                return DCINameEnumeration.EDGI;
-            case "gae":
-                return DCINameEnumeration.GAE;
-            case "gbac":
-                return DCINameEnumeration.GBAC;
             case "shiwa":
                 return DCINameEnumeration.SHIWA;
             case "glite":
@@ -80,70 +66,12 @@ public class DCITools {
                 return DCINameEnumeration.GT_2;
             case "gt4":
                 return DCINameEnumeration.GT_4;
-            case "gt5":
-                return DCINameEnumeration.GT_5;
             case "local":
                 return DCINameEnumeration.LOCAL;
-            case "lsf":
-                return DCINameEnumeration.LSF;
-            case "pbs":
-                return DCINameEnumeration.PBS;
-            case "service":
-                return DCINameEnumeration.SERVICE;
-            case "unicore":
-                return DCINameEnumeration.UNICORE;
-            // FIXME: HTTP and REST missing
         }
 
         throw new IllegalArgumentException("Unknown dci name detected ("
                 + dciName + ")");
-    }
-
-    public static String getStringFromDCIName(DCINameEnumeration dciName)
-            throws IllegalArgumentException {
-        if (dciName == null) {
-            throw new IllegalArgumentException("Unknown dci name detected ("
-                    + dciName + ")");
-        }
-
-        switch (dciName) {
-            case ARC:
-                return "arc";
-            case BOINC:
-                return "boinc";
-            case CLOUDBROKER:
-                return "cloudbroker";
-            case EDGI:
-                return "edgi";
-            case GAE:
-                return "gae";
-            case GBAC:
-                return "gbac";
-            case SHIWA:
-                return "shiwa";
-            case GLITE:
-                return "glite";
-            case GT_2:
-                return "gt2";
-            case GT_4:
-                return "gt4";
-            case GT_5:
-                return "gt5";
-            case LOCAL:
-                return "local";
-            case LSF:
-                return "lsf";
-            case PBS:
-                return "pbs";
-            case SERVICE:
-                return "service";
-            case UNICORE:
-                return "unicore";
-            // FIXME: HTTP and REST missing
-            // FIXME: case service||axis->service, how to make the difference?
-        }
-
-        return null;
     }
 
     public static MiddlewareType mbsdlMiddleware(String pType, String pVO,
@@ -207,18 +135,6 @@ public class DCITools {
         JobDefinitionType jsdl = (JobDefinitionType) obj.getValue();
 
         return jsdl;
-    }
-
-    public static <T> T getData(List<Object> pAny, Class<T> pClient) {
-        for (int i = 0; i < pAny.size(); i++) {
-            Object returnedObj = pAny.get(i);
-
-            if (returnedObj.getClass().getName().equals(pClient.getName())) {
-                return (T) returnedObj;
-            }
-        }
-
-        return null;
     }
 
     public static <T> T extractClass(Element element, T eClass) throws JAXBException {

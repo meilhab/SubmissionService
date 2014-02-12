@@ -56,16 +56,4 @@ public class FilesHelper {
                     + folderName + ")");
         }
     }
-
-    public static void initializeFolder(String storage, String folderName)
-            throws IOException {
-        Path path = Paths.get(storage, folderName);
-        if (!Files.exists(path)
-                && !Files.isDirectory(Files.createDirectories(path))) {
-            logger.log(Level.ERROR, " Cannot create the folder ("
-                    + folderName + ")");
-            throw new IOException("Cannot create the folder ("
-                    + folderName + ")");
-        }
-    }
 }

@@ -32,6 +32,7 @@ public class JSDLHelpers {
             throws NotFoundException, IllegalArgumentException {
         BeInstance middleware = engineInstance.getMiddlewareConfig();
 
+        // TODO: add CPUs number here or after
         if (middleware instanceof Gt2) {
             MiddlewareConfig.configurationResource(
                     (Gt2) engineInstance.getMiddlewareConfig(), jsdl);
@@ -49,17 +50,21 @@ public class JSDLHelpers {
                     "No middleware configuration or not supported configuration "
                     + "detected", null);
         }
-
+        // TODO: add job type MPI here
         MiddlewareConfig.modifySDLType(middleware, jsdl);
     }
 
     private static boolean checkImplementation(ImplJSDL implementation) {
-        return implementation != null && implementation.getExecutionNode() != null;
+        return implementation != null && implementation.getExecutionNode() != null
+                && implementation.getWorkflowEngineName() != null
+                && implementation.getWorkflowEngineVersion() != null;
     }
 
     private static boolean checkWorkflowEngineInstance(WorkflowEngineInstance instance) {
         return instance != null && instance.getDeploymentConfig() != null
-                && instance.getMiddlewareConfig() != null;
+                && instance.getMiddlewareConfig() != null
+                && instance.getWorkflowEngineName() != null
+                && instance.getWorkflowEngineVersion() != null;
     }
 
     public static void checkRepositoryData(ImplJSDL implementation,
@@ -71,20 +76,24 @@ public class JSDLHelpers {
                     + "workflow engine instance incorreclty configured");
         }
 
-        // TODO modification for workflow engine version as well
         if (!implementation.getWorkflowEngineName().
-                equals(engineInstance.getWorkflowEngineName())) {
+                equals(engineInstance.getWorkflowEngineName())
+                || !implementation.getWorkflowEngineVersion().
+                equals(engineInstance.getWorkflowEngineVersion())) {
             throw new IllegalArgumentException("Incompatibility between "
                     + "implementation needed workflow engine instance ("
-                    + implementation.getWorkflowEngineName() + ") and "
+                    + implementation.getWorkflowEngineName() + " "
+                    + implementation.getWorkflowEngineVersion() + ") and "
                     + "workflow engine instance requested ("
-                    + engineInstance.getWorkflowEngineName() + ")");
+                    + engineInstance.getWorkflowEngineName() + " "
+                    + engineInstance.getWorkflowEngineVersion() + ")");
         }
     }
 
     public static String configureMiddleware(WorkflowEngineInstance instance,
             JSDLItem jsdl) throws NotFoundException, IllegalArgumentException {
         if (instance == null || instance.getMiddlewareConfig() == null
+                || instance.getMiddlewareConfig().getIdBackend() == null
                 || instance.getMiddlewareConfig().getIdBackend().getBackendName() == null) {
             throw new NotFoundException("Middleware not configured", null);
         }

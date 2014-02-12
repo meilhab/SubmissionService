@@ -7,6 +7,7 @@ package uk.ac.wmin.cpc.submission.jsdl.helpers;
 import java.util.List;
 import org.ggf.schemas.jsdl._2005._11.jsdl.DataStagingType;
 import uk.ac.wmin.cpc.submission.jsdl.JSDLItem;
+import uri.mbschedulingdescriptionlanguage.DCINameEnumeration;
 import uri.mbschedulingdescriptionlanguage.MiddlewareType;
 import uri.mbschedulingdescriptionlanguage.SDLType;
 
@@ -50,9 +51,9 @@ public class JSDLExtractor {
         }
     }
 
-    private String getMiddlewareInformation(SDLType metabroker,
-            ExploreMiddleware exploreMiddleware)
-            throws IllegalArgumentException {
+    public DCINameEnumeration getMiddlewareName() throws IllegalArgumentException {
+        SDLType metabroker = item.getMetabroker();
+
         if (metabroker != null && metabroker.getConstraints() != null
                 && metabroker.getConstraints().getMiddleware() != null) {
             List<MiddlewareType> listMiddlewares =
@@ -60,25 +61,28 @@ public class JSDLExtractor {
 
             if (listMiddlewares != null && listMiddlewares.size() == 1) {
                 MiddlewareType middleware = listMiddlewares.get(0);
-
-                switch (exploreMiddleware) {
-                    case NAME:
-                        return DCITools.getStringFromDCIName(middleware.getDCIName());
-                    case SUBMISSION_SERVICE:
-                        return middleware.getManagedResource();
-                }
+                return middleware.getDCIName();
             }
         }
 
         throw new IllegalArgumentException("No middleware information");
     }
 
-    public String getMiddlewareName() throws IllegalArgumentException {
-        return getMiddlewareInformation(item.getMetabroker(), ExploreMiddleware.NAME);
-    }
-
     public String getSubmissionServiceLocation() throws IllegalArgumentException {
-        return getMiddlewareInformation(item.getMetabroker(), ExploreMiddleware.SUBMISSION_SERVICE);
+        SDLType metabroker = item.getMetabroker();
+
+        if (metabroker != null && metabroker.getConstraints() != null
+                && metabroker.getConstraints().getMiddleware() != null) {
+            List<MiddlewareType> listMiddlewares =
+                    metabroker.getConstraints().getMiddleware();
+
+            if (listMiddlewares != null && listMiddlewares.size() == 1) {
+                MiddlewareType middleware = listMiddlewares.get(0);
+                return middleware.getManagedResource();
+            }
+        }
+
+        throw new IllegalArgumentException("No middleware information");
     }
 
     public String getUserID() throws IllegalArgumentException {

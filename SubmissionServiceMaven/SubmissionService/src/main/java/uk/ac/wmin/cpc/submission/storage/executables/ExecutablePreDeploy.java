@@ -38,13 +38,19 @@ public class ExecutablePreDeploy {
 
     public void createFile() throws IOException {
         // user folder
-        FilesHelper.initializeFolder(STORAGE, userFolder);
+        FilesHelper.initializeFolder(STORAGE);
+        if (logger.isDebugEnabled()) {
+            logger.log(Level.DEBUG, "STORAGE location recovered (" + STORAGE + ")");
+        }
+        
+        Path pathFile = Paths.get(STORAGE, userFolder);
+        FilesHelper.initializeFolder(pathFile.toString());
         if (logger.isDebugEnabled()) {
             logger.log(Level.DEBUG, "User location recovered (" + userFolder + ")");
         }
 
         // temporary folder
-        Path pathFile = Files.createTempDirectory(
+        pathFile = Files.createTempDirectory(
                 Paths.get(STORAGE, userFolder), appFolder);
         this.appFolder = pathFile.getFileName().toString();
         if (logger.isDebugEnabled()) {

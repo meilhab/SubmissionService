@@ -55,7 +55,6 @@ public class JSDLModificator {
             throws JAXBException, MalformedURLException, NotFoundException,
             IllegalArgumentException, DatabaseProblemException,
             ForbiddenException, IOException, IllegalParameterException {
-        // TODO: continue this function
         // getDataFromRepository()  -> get all data to exploit them             OK
         // modifyPOSIXApplication() -> add executable and arguments?            OK
         // modifyDataStaging()      -> add new inputs                           OK
@@ -116,10 +115,9 @@ public class JSDLModificator {
         try {
             if (DCITools.getJSDLXML(jsdl) != null) {
                 JSDLExtractor jsdlExtractor = new JSDLExtractor(newJSDL);
-                String dciName = jsdlExtractor.getMiddlewareName();
-                // TODO: has to be changed after portal integration
-                if (dciName.equals(
-                        DCITools.getStringFromDCIName(DCINameEnumeration.SHIWA))) {
+                DCINameEnumeration dciName = jsdlExtractor.getMiddlewareName();
+
+                if (dciName.equals(DCINameEnumeration.SHIWA)) {
                     logger.info("JSDL have been checked quickly: OK");
                     return jsdlExtractor;
                 }

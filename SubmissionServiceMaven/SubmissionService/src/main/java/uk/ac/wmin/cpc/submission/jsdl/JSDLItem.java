@@ -136,6 +136,14 @@ public class JSDLItem {
                 DCITools.mbsdlMiddleware(dciType, gridVO, gridProxy));
     }
 
+    // TODO: use this function for MPI integration 
+//    public void addMPIType() throws IllegalArgumentException {
+//        if (metabroker == null || metabroker.getConstraints() == null) {
+//            throw new IllegalArgumentException("metabroker not initialized");
+//        }
+//
+//        metabroker.getConstraints().getJobType().add(JobTypeEnumeration.MPI);
+//    }
     public void createResource(String hostName,
             OperatingSystemTypeEnumeration operatingSystem) {
         CandidateHostsType candidateHostsType = new CandidateHostsType();
@@ -151,6 +159,30 @@ public class JSDLItem {
         resources.setCandidateHosts(candidateHostsType);
     }
 
+    // TODO: use this function for MPI integration
+//    public void addCPUsNumber(int numberCPUs) throws IllegalArgumentException {
+//        if (numberCPUs <= 0 || resources == null) {
+//            throw new IllegalArgumentException("CPUs number incorrect or "
+//                    + "resource not initialized");
+//        }
+//
+//        BoundaryType boundedValue = new BoundaryType();
+//        boundedValue.setValue(numberCPUs);
+//        RangeValueType valueCPU = new RangeValueType();
+//        valueCPU.setUpperBoundedRange(boundedValue);
+//        resources.setTotalCPUCount(valueCPU);
+//    }
+    //TODO: use this function for MaxWallTime integration
+//    public void addMaxWallTimeValue(int value) throws IllegalArgumentException {
+//        if (posixApplication == null || value <= 0) {
+//            throw new IllegalArgumentException("MaxWallTime incorrect or "
+//                    + "application not initialized");
+//        }
+//
+//        LimitsType limit = new LimitsType();
+//        limit.setValue(BigInteger.valueOf(value));
+//        posixApplication.setWallTimeLimit(limit);
+//    }
     public CreateActivityType getExecutableJSDL()
             throws JAXBException {
         JobDefinitionType jsdl = getCompleteJSDL();
