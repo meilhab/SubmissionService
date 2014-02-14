@@ -7,27 +7,22 @@ package uk.ac.wmin.cpc.submission.jsdl;
 import uk.ac.wmin.cpc.submission.jsdl.helpers.JSDLHelpers;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.JAXBException;
 import org.apache.log4j.Logger;
-import org.ggf.schemas.jsdl._2005._11.jsdl.CreationFlagEnumeration;
 import org.ggf.schemas.jsdl._2005._11.jsdl.DataStagingType;
 import org.ggf.schemas.jsdl._2005._11.jsdl.JobDefinitionType;
 import org.ggf.schemas.jsdl._2005._11.jsdl_posix.ArgumentType;
-import org.shiwa.repository.submission.interfaces.ExecutionNode;
 import uk.ac.wmin.cpc.submission.jsdl.helpers.DCITools;
 import uk.ac.wmin.cpc.submission.jsdl.helpers.JSDLExtractor;
 import uk.ac.wmin.cpc.submission.frontend.servlets.LoggerServlet;
 import org.shiwa.repository.submission.interfaces.ImplJSDL;
-import org.shiwa.repository.submission.interfaces.Param;
 import org.shiwa.repository.submission.interfaces.Parameter;
 import org.shiwa.repository.submission.interfaces.WorkflowEngineInstance;
 import org.shiwa.repository.submission.service.DatabaseProblemException;
 import org.shiwa.repository.submission.service.ForbiddenException;
 import org.shiwa.repository.submission.service.NotFoundException;
 import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
-import uk.ac.wmin.cpc.submission.frontend.helpers.Configuration;
 import uk.ac.wmin.cpc.submission.helpers.ServiceTools;
 import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
 import uri.mbschedulingdescriptionlanguage.DCINameEnumeration;
@@ -110,6 +105,29 @@ public class JSDLModificator {
         return repository.getFullWEIForJSDL(engineName, engineVersion, instanceName);
     }
 
+    private void modifyPOSIXApplicationAndDataStaging(ImplJSDL implementation,
+            WorkflowEngineInstance engineInstance) throws MalformedURLException,
+            NotFoundException, IllegalArgumentException,
+            IOException, DatabaseProblemException, ForbiddenException,
+            IllegalParameterException {
+        logger.info("Modification POSIXApplication JSDL");
+        // checking params
+        Parameter[] params = checkInputOutputs(implementation);
+
+        // configuration of the executable and datastaging if needed
+        JSDLHelpers.configureExecutable(implementation, engineInstance, newJSDL,
+                extractor.getUserID());
+
+        //configuration of inputs and outputs
+        JSDLHelpers.treatParameters(implementation, params, newJSDL, extractor);
+
+        // add workflow definition to argument
+        JSDLHelpers.configureDefinition(engineInstance, implementation, newJSDL);
+
+        // configuration of the max wall time
+        JSDLHelpers.configureMaxWallTime(implementation, newJSDL);
+    }
+
     private JSDLExtractor quickCheckJSDL(JobDefinitionType jsdl)
             throws IllegalArgumentException {
         try {
@@ -127,30 +145,6 @@ public class JSDLModificator {
         }
 
         throw new IllegalArgumentException("JSDL file or dciName wrong");
-    }
-
-    private void modifyPOSIXApplicationAndDataStaging(ImplJSDL implementation,
-            WorkflowEngineInstance engineInstance) throws MalformedURLException,
-            NotFoundException, IllegalArgumentException,
-            IOException, DatabaseProblemException, ForbiddenException,
-            IllegalParameterException {
-        logger.info("Modification POSIXApplication JSDL");
-        // checking params
-        Parameter[] params = checkInputOutputs(implementation);
-
-        // configuration of the executable and datastaging if needed
-        JSDLHelpers.configureExecutable(implementation, engineInstance, newJSDL,
-                extractor.getUserID());
-
-        //configuration of inputs and outputs
-        treatParameters(implementation, params);
-
-        // add workflow definition to argument
-        ArgumentType argumentDefinition = new ArgumentType();
-        String cmdLine = engineInstance.getPrefixWorkflow()
-                + " " + implementation.getDefinitionFileName();
-        argumentDefinition.setValue(cmdLine.trim());
-        newJSDL.getApplicationArguments().add(0, argumentDefinition);
     }
 
     private Parameter[] checkInputOutputs(ImplJSDL implementation)
@@ -212,148 +206,6 @@ public class JSDLModificator {
             String type = input ? "Input" : "Output";
             throw new IllegalArgumentException(
                     "Wrong configuration of a " + type + " port");
-        }
-    }
-
-    private void treatParameters(ImplJSDL implementation, Parameter[] paramsNonFixed)
-            throws IllegalArgumentException {
-        logger.info("Parameters are processing for " + implementation.getAppName());
-        List<ArgumentType> nonFixedJSDL = newJSDL.getApplicationArguments();
-
-        ExecutionNode executionNode = implementation.getExecutionNode();
-        List<Param> allInputs = executionNode.getListInputs();
-        List<Param> allOutputs = executionNode.getListOutputs();
-        List<Param> allParameters = new ArrayList<>();
-        allParameters.addAll(allInputs);
-        allParameters.addAll(allOutputs);
-
-        List<String> argumentsInputs = new ArrayList<>();
-        List<String> argumentsOutputs = new ArrayList<>();
-
-        String portalURL = extractor.getStorageURL();
-
-        for (Param parameter : allParameters) {
-            if (parameter.isInput()) {
-                treatInputs(parameter, argumentsInputs, paramsNonFixed, nonFixedJSDL);
-            } else {
-                treatOutputs(parameter, argumentsOutputs, portalURL);
-            }
-        }
-
-        treatArguments(argumentsInputs, argumentsOutputs);
-    }
-
-    private void treatInputs(Param parameter, List<String> argumentsInputs,
-            Parameter[] paramsNonFixed, List<ArgumentType> nonFixedJSDL)
-            throws IllegalArgumentException {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Input being processed: " + parameter.getTitle());
-            logger.debug("Is file? " + parameter.isFile());
-            logger.debug("Is fixed? " + parameter.isFixed());
-            logger.debug("Is CmdLine? " + parameter.isCmdLine());
-        }
-
-        if (parameter.isFile()) {
-            if (parameter.isFixed()) {
-                // file fixed
-                newJSDL.addNewInputFile(parameter.getFileName(),
-                        CreationFlagEnumeration.OVERWRITE, true,
-                        parameter.getDefaultValue());
-            } else {
-                // file non-fixed
-                for (DataStagingType data : newJSDL.getInputFiles()) {
-                    if (data.getFileName().equals(parameter.getFileName())) {
-                        if (data.getSource().getURI().equals("Default")) {
-                            data.getSource().setURI(parameter.getDefaultValue());
-                        }
-                        break;
-                    }
-                }
-            }
-
-            if (parameter.isCmdLine()) {
-                // file cmdLine
-                String cmdLine = parameter.getPrefixCmd() + " "
-                        + parameter.getFileName();
-                argumentsInputs.add(cmdLine.trim());
-            }
-        } else {
-            if (parameter.isFixed() && parameter.isCmdLine()) {
-                // non-file fixed
-                argumentsInputs.add((parameter.getPrefixCmd() + " "
-                        + parameter.getDefaultValue()).trim());
-            } else if (!parameter.isFixed() && parameter.isCmdLine()) {
-                // non-file non-fixed
-                String cmdLine = parameter.getPrefixCmd() + " "
-                        + getValueArgument(paramsNonFixed, nonFixedJSDL,
-                        parameter);
-                argumentsInputs.add(cmdLine.trim());
-            }
-        }
-    }
-
-    private void treatOutputs(Param parameter, List<String> argumentsOutputs,
-            String portalURL) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Output being processed: " + parameter.getTitle());
-            logger.debug("Is file? " + parameter.isFile());
-            logger.debug("Is fixed? " + parameter.isFixed());
-            logger.debug("Is CmdLine? " + parameter.isCmdLine());
-        }
-
-        if (parameter.isFile()) {
-            if (parameter.isFixed()) {
-                // file fixed
-                newJSDL.addNewOutputFile(parameter.getFileName(),
-                        Configuration.getFileSystemName(),
-                        CreationFlagEnumeration.OVERWRITE, true, portalURL);
-            } // file non-fixed already done
-
-            if (parameter.isCmdLine()) {
-                // file cmdLine
-                String cmdLine = parameter.getPrefixCmd() + " "
-                        + parameter.getFileName();
-                argumentsOutputs.add(cmdLine.trim());
-            }
-        } // not taking non file
-    }
-
-    private String getValueArgument(Parameter[] paramsNFImpl,
-            List<ArgumentType> paramsNFJSDL, Param param)
-            throws IllegalArgumentException {
-        if (paramsNFImpl.length != paramsNFJSDL.size()) {
-            throw new IllegalArgumentException("Argument problem when "
-                    + "modifying the JSDL");
-        }
-
-        for (int i = 0; i < paramsNFImpl.length; i++) {
-            String[] dataNFImpl = ((String) paramsNFImpl[i].getValue()).split(",");
-            if (dataNFImpl.length >= 7) {
-                if (dataNFImpl[0].equals(param.getTitle())) {
-                    return paramsNFJSDL.get(i).getValue();
-                }
-            }
-        }
-
-        throw new IllegalArgumentException("Argument not found, problem between"
-                + " the repository data and the JSDL");
-    }
-
-    private void treatArguments(List<String> argumentsInputs, List<String> argumentsOutputs) {
-        logger.info("New Arguments generated for POSIXApplication JSDL");
-        newJSDL.getApplicationArguments().clear();
-
-        for (String argument : argumentsInputs) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("(" + argument + ") -> added to list");
-            }
-            newJSDL.setApplicationArgument(argument);
-        }
-        for (String argument : argumentsOutputs) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("(" + argument + ") -> added to list");
-            }
-            newJSDL.setApplicationArgument(argument);
         }
     }
 }

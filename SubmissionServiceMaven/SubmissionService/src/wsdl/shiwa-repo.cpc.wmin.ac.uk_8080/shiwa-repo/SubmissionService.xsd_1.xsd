@@ -308,6 +308,7 @@
 <xs:element name="implFullName" type="xs:string" minOccurs="0" />
 <xs:element name="listInputs" type="tns:param" nillable="true" minOccurs="0" maxOccurs="unbounded" />
 <xs:element name="listOutputs" type="tns:param" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="maxWallTime" type="xs:int" />
 </xs:sequence>
 </xs:complexType>
 

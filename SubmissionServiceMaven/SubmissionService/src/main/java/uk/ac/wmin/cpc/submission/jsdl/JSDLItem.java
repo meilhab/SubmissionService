@@ -5,6 +5,7 @@
 package uk.ac.wmin.cpc.submission.jsdl;
 
 import dci.extension.ExtensionType;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.JAXBElement;
@@ -26,6 +27,7 @@ import org.ggf.schemas.jsdl._2005._11.jsdl.ResourcesType;
 import org.ggf.schemas.jsdl._2005._11.jsdl.SourceTargetType;
 import org.ggf.schemas.jsdl._2005._11.jsdl_posix.ArgumentType;
 import org.ggf.schemas.jsdl._2005._11.jsdl_posix.FileNameType;
+import org.ggf.schemas.jsdl._2005._11.jsdl_posix.LimitsType;
 import org.ggf.schemas.jsdl._2005._11.jsdl_posix.POSIXApplicationType;
 import org.w3c.dom.Element;
 import uk.ac.wmin.cpc.submission.jsdl.helpers.DCITools;
@@ -172,17 +174,17 @@ public class JSDLItem {
 //        valueCPU.setUpperBoundedRange(boundedValue);
 //        resources.setTotalCPUCount(valueCPU);
 //    }
-    //TODO: use this function for MaxWallTime integration
-//    public void addMaxWallTimeValue(int value) throws IllegalArgumentException {
-//        if (posixApplication == null || value <= 0) {
-//            throw new IllegalArgumentException("MaxWallTime incorrect or "
-//                    + "application not initialized");
-//        }
-//
-//        LimitsType limit = new LimitsType();
-//        limit.setValue(BigInteger.valueOf(value));
-//        posixApplication.setWallTimeLimit(limit);
-//    }
+    public void addMaxWallTimeValue(int value) throws IllegalArgumentException {
+        if (posixApplication == null || value <= 0) {
+            throw new IllegalArgumentException("MaxWallTime incorrect or "
+                    + "application not initialized");
+        }
+
+        LimitsType limit = new LimitsType();
+        limit.setValue(BigInteger.valueOf(value));
+        posixApplication.setWallTimeLimit(limit);
+    }
+
     public CreateActivityType getExecutableJSDL()
             throws JAXBException {
         JobDefinitionType jsdl = getCompleteJSDL();
