@@ -10,6 +10,7 @@ import org.shiwa.repository.submission.interfaces.GLite;
 import org.shiwa.repository.submission.interfaces.Gt2;
 import org.shiwa.repository.submission.interfaces.Gt4;
 import org.shiwa.repository.submission.interfaces.Local;
+import org.shiwa.repository.submission.interfaces.Pbs;
 import uk.ac.wmin.cpc.submission.jsdl.JSDLItem;
 
 /**
@@ -43,6 +44,12 @@ public class MiddlewareConfig {
 
     public static void configurationResource(GLite middleware, JSDLItem jsdl) {
         jsdl.createResource("",
+                OperatingSystemTypeEnumeration.fromValue(middleware.getIdOS().getName()));
+    }
+
+    public static void configurationResource(Pbs middleware, JSDLItem jsdl) {
+        String hostname = middleware.getJobManager() + "/-";
+        jsdl.createResource(hostname,
                 OperatingSystemTypeEnumeration.fromValue(middleware.getIdOS().getName()));
     }
 }

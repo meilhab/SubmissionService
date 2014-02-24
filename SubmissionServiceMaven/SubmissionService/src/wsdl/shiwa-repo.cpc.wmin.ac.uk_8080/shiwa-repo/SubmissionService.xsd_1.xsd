@@ -207,6 +207,16 @@
 </xs:complexContent>
 </xs:complexType>
 
+<xs:complexType name="pbs">
+<xs:complexContent>
+<xs:extension base="tns:beInstance">
+<xs:sequence>
+<xs:element name="jobManager" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
 <xs:complexType name="local">
 <xs:complexContent>
 <xs:extension base="tns:beInstance">

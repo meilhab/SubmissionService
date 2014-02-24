@@ -7,7 +7,6 @@ package uk.ac.wmin.cpc.submission.clients;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import org.shiwa.repository.submission.interfaces.BeInstance;
 import uk.ac.wmin.cpc.submission.frontend.impl.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.frontend.impl.RepositoryCommunicationException;
 import uk.ac.wmin.cpc.submission.frontend.impl.WSCodeListService;
@@ -15,6 +14,7 @@ import uk.ac.wmin.cpc.submission.frontend.impl.WSCodeListService_Service;
 import uk.ac.wmin.cpc.submission.frontend.interfaces.UserAccessConfig;
 import org.shiwa.repository.submission.interfaces.ImplShort;
 import org.shiwa.repository.submission.interfaces.Parameter;
+import uk.ac.wmin.cpc.submission.frontend.interfaces.ExecutorSite;
 
 /**
  *
@@ -118,7 +118,7 @@ public class ClientSearch {
         return listParameters.toArray(new Parameter[listParameters.size()]);
     }
 
-    public BeInstance getExecutorSiteInformation(String implName, String executorName)
+    public ExecutorSite getExecutorSiteInformation(String implName, String executorName)
             throws IllegalParameterException, MalformedURLException,
             RepositoryCommunicationException {
         return callSubmissionService().getExecutorSiteConfiguration(

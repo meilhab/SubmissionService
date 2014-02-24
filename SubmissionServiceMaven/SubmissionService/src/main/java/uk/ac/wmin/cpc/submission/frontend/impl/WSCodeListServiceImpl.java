@@ -19,7 +19,9 @@ import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.exceptions.RepositoryCommunicationException;
 import uk.ac.wmin.cpc.submission.frontend.servlets.LoggerServlet;
 import uk.ac.wmin.cpc.submission.frontend.interfaces.WSCodeListService;
+import uk.ac.wmin.cpc.submission.frontend.transferobjects.ExecutorSite;
 import uk.ac.wmin.cpc.submission.frontend.transferobjects.UserAccessConfig;
+import uk.ac.wmin.cpc.submission.jsdl.helpers.DCITools;
 import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
 
 /**
@@ -99,7 +101,7 @@ public class WSCodeListServiceImpl implements WSCodeListService {
     }
 
     @Override
-    public BeInstance getExecutorSiteConfiguration(String urlRepository, String implName,
+    public ExecutorSite getExecutorSiteConfiguration(String urlRepository, String implName,
             String siteName)
             throws IllegalParameterException, RepositoryCommunicationException {
         logger.info("START: getExecutorSiteConfiguration for: " + implName);
@@ -112,7 +114,18 @@ public class WSCodeListServiceImpl implements WSCodeListService {
 
         try {
             RepositoryWSAccess repository = new RepositoryWSAccess(urlRepository);
-            return repository.getBackendInstance(implName, siteName);
+            BeInstance backend = repository.getBackendInstance(implName, siteName);
+
+            ExecutorSite executorSite = new ExecutorSite();
+            executorSite.setType(DCITools.getDCIName(backend));
+            executorSite.setResource(backend.getResource());
+
+            if (logger.isDebugEnabled()) {
+                logger.debug("Middleware: " + executorSite.getType());
+                logger.debug("Resource: " + executorSite.getResource());
+            }
+
+            return executorSite;
         } catch (NotFoundException | DatabaseProblemException |
                 ForbiddenException | IOException ex) {
             ExceptionsManager.manageExceptionsCodeListService(ex, logger);

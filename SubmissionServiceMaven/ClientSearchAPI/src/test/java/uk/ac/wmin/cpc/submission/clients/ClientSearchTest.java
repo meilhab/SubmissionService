@@ -30,7 +30,7 @@ public class ClientSearchTest {
         client = new ClientSearch();
         client.setExtServiceId("testPortalRepo");
         client.setExtUserId("testPortalRepo");
-        client.setUrlSubmissionService("https://submission.cpc.wmin.ac.uk:8181/SubmissionService");
+        client.setUrlSubmissionService("http://submission.cpc.wmin.ac.uk:8080/SubmissionService");
         client.setUrlRepository("http://shiwa-repo.cpc.wmin.ac.uk:8080/shiwa-repo");
 //        lcid = "QRCodeMatrixGenerator#1.0";
 //        lcid = "HelloAnyoneTaverna2#1.0";

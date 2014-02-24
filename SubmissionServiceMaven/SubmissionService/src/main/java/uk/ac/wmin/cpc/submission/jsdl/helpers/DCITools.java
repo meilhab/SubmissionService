@@ -7,7 +7,6 @@ package uk.ac.wmin.cpc.submission.jsdl.helpers;
 import dci.extension.ExtensionType;
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
-import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -25,6 +24,12 @@ import org.ggf.schemas.jsdl._2005._11.jsdl_posix.GroupNameType;
 import org.ggf.schemas.jsdl._2005._11.jsdl_posix.LimitsType;
 import org.ggf.schemas.jsdl._2005._11.jsdl_posix.POSIXApplicationType;
 import org.ggf.schemas.jsdl._2005._11.jsdl_posix.UserNameType;
+import org.shiwa.repository.submission.interfaces.BeInstance;
+import org.shiwa.repository.submission.interfaces.GLite;
+import org.shiwa.repository.submission.interfaces.Gt2;
+import org.shiwa.repository.submission.interfaces.Gt4;
+import org.shiwa.repository.submission.interfaces.Local;
+import org.shiwa.repository.submission.interfaces.Pbs;
 import org.w3c.dom.Element;
 import uri.mbschedulingdescriptionlanguage.DCINameEnumeration;
 import uri.mbschedulingdescriptionlanguage.MiddlewareType;
@@ -57,21 +62,33 @@ public class DCITools {
                     + dciName + ")");
         }
 
-        switch (dciName.toLowerCase()) {
-            case "shiwa":
-                return DCINameEnumeration.SHIWA;
-            case "glite":
-                return DCINameEnumeration.GLITE;
-            case "gt2":
-                return DCINameEnumeration.GT_2;
-            case "gt4":
-                return DCINameEnumeration.GT_4;
-            case "local":
-                return DCINameEnumeration.LOCAL;
+        DCINameEnumeration name = DCINameEnumeration.valueOf(dciName.toLowerCase());
+        if (name == null) {
+            throw new IllegalArgumentException("Unknown dci name detected ("
+                    + dciName + ")");
         }
 
-        throw new IllegalArgumentException("Unknown dci name detected ("
-                + dciName + ")");
+        return name;
+    }
+
+    public static String getDCIName(BeInstance middleware) throws IllegalArgumentException {
+        if (middleware == null) {
+            throw new IllegalArgumentException("Unknown middleware detected");
+        }
+
+        if (middleware instanceof Gt2) {
+            return DCINameEnumeration.GT_2.value();
+        } else if (middleware instanceof Gt4) {
+            return DCINameEnumeration.GT_4.value();
+        } else if (middleware instanceof Local) {
+            return DCINameEnumeration.LOCAL.value();
+        } else if (middleware instanceof GLite) {
+            return DCINameEnumeration.GLITE.value();
+        } else if (middleware instanceof Pbs) {
+            return DCINameEnumeration.PBS.value();
+        } else {
+            throw new IllegalArgumentException("Middleware not supported detected");
+        }
     }
 
     public static MiddlewareType mbsdlMiddleware(String pType, String pVO,

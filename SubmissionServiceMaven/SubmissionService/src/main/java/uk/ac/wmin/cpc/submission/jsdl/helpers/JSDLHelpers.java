@@ -22,6 +22,7 @@ import org.shiwa.repository.submission.interfaces.Local;
 import org.shiwa.repository.submission.interfaces.OnTheFly;
 import org.shiwa.repository.submission.interfaces.Param;
 import org.shiwa.repository.submission.interfaces.Parameter;
+import org.shiwa.repository.submission.interfaces.Pbs;
 import org.shiwa.repository.submission.interfaces.PreDeploy;
 import org.shiwa.repository.submission.interfaces.WorkflowEngineInstance;
 import org.shiwa.repository.submission.service.NotFoundException;
@@ -56,6 +57,9 @@ public class JSDLHelpers {
         } else if (middleware instanceof GLite) {
             MiddlewareConfig.configurationResource(
                     (GLite) engineInstance.getMiddlewareConfig(), jsdl);
+        } else if (middleware instanceof Pbs) {
+            MiddlewareConfig.configurationResource(
+                    (Pbs) engineInstance.getMiddlewareConfig(), jsdl);
         } else {
             throw new NotFoundException(
                     "No middleware configuration or not supported configuration "
@@ -101,7 +105,7 @@ public class JSDLHelpers {
         }
     }
 
-    public static String configureMiddleware(WorkflowEngineInstance instance,
+    public static void configureMiddleware(WorkflowEngineInstance instance,
             JSDLItem jsdl) throws NotFoundException, IllegalArgumentException {
         if (instance == null || instance.getMiddlewareConfig() == null
                 || instance.getMiddlewareConfig().getIdBackend() == null
@@ -110,8 +114,6 @@ public class JSDLHelpers {
         }
 
         JSDLHelpers.modifyResourcesAndSDLType(instance, jsdl);
-
-        return instance.getMiddlewareConfig().getIdBackend().getBackendName();
     }
 
     public static void configureExecutable(ImplJSDL implementation,

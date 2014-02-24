@@ -7,11 +7,11 @@ package uk.ac.wmin.cpc.submission.frontend.interfaces;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
-import org.shiwa.repository.submission.interfaces.BeInstance;
 import org.shiwa.repository.submission.interfaces.ImplShort;
 import org.shiwa.repository.submission.interfaces.Parameter;
 import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.exceptions.RepositoryCommunicationException;
+import uk.ac.wmin.cpc.submission.frontend.transferobjects.ExecutorSite;
 import uk.ac.wmin.cpc.submission.frontend.transferobjects.UserAccessConfig;
 
 /**
@@ -40,7 +40,7 @@ public interface WSCodeListService {
             throws IllegalParameterException, RepositoryCommunicationException;
 
     @WebMethod(operationName = "getExecutorSiteConfiguration")
-    public BeInstance getExecutorSiteConfiguration(
+    public ExecutorSite getExecutorSiteConfiguration(
             @WebParam(name = "urlRepository") String urlRepository,
             @WebParam(name = "implName") String implName,
             @WebParam(name = "siteName") String siteName)
