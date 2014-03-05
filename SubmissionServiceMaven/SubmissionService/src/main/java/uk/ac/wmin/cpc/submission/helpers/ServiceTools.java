@@ -17,7 +17,7 @@ public class ServiceTools {
 
     public static void checkParam(Object... data)
             throws IllegalParameterException {
-        Logger logger = LoggerServlet.getLogger(4);
+        Logger logger = LoggerServlet.getMainLogger();
 
         for (Object object : data) {
             if (object == null
@@ -31,7 +31,7 @@ public class ServiceTools {
 
     public static void checkUserAccessConfig(UserAccessConfig userAccessConfig)
             throws IllegalParameterException {
-        Logger logger = LoggerServlet.getLogger(4);
+        Logger logger = LoggerServlet.getMainLogger();
 
         if (userAccessConfig == null) {
             logger.error("No user data given");

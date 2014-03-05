@@ -37,7 +37,7 @@ import uk.ac.wmin.cpc.submission.jsdl.JSDLItem;
  */
 public class JSDLHelpers {
 
-    private static Logger logger = LoggerServlet.getLogger(3);
+    private static Logger logger = LoggerServlet.getMainLogger();
 
     private static void modifyResourcesAndSDLType(
             WorkflowEngineInstance engineInstance, JSDLItem jsdl)

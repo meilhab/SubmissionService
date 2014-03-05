@@ -62,7 +62,7 @@ public class DCITools {
                     + dciName + ")");
         }
 
-        DCINameEnumeration name = DCINameEnumeration.valueOf(dciName.toLowerCase());
+        DCINameEnumeration name = DCINameEnumeration.fromValue(dciName.toLowerCase());
         if (name == null) {
             throw new IllegalArgumentException("Unknown dci name detected ("
                     + dciName + ")");

@@ -33,7 +33,7 @@ import uri.mbschedulingdescriptionlanguage.DCINameEnumeration;
  */
 public class JSDLModificator {
 
-    private static Logger logger = LoggerServlet.getLogger(2);
+    private static Logger logger = LoggerServlet.getMainLogger();
     private RepositoryWSAccess repository;
     private JSDLExtractor extractor;
     private JSDLItem newJSDL;
@@ -131,7 +131,13 @@ public class JSDLModificator {
     private JSDLExtractor quickCheckJSDL(JobDefinitionType jsdl)
             throws IllegalArgumentException {
         try {
-            if (DCITools.getJSDLXML(jsdl) != null) {
+            String valueJSDL = DCITools.getJSDLXML(jsdl);
+
+            if (logger.isDebugEnabled()) {
+                logger.debug(valueJSDL);
+            }
+
+            if (valueJSDL != null) {
                 JSDLExtractor jsdlExtractor = new JSDLExtractor(newJSDL);
                 DCINameEnumeration dciName = jsdlExtractor.getMiddlewareName();
 

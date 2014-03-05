@@ -20,6 +20,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import uk.ac.wmin.cpc.submission.frontend.helpers.PropertiesManager;
+import uk.ac.wmin.cpc.submission.frontend.impl.WSCodeListServiceImpl;
+import uk.ac.wmin.cpc.submission.frontend.impl.WSExecutionServiceImpl;
 
 /**
  *
@@ -163,7 +165,16 @@ public class LoggerServlet extends HttpServlet {
         return log4jLevel;
     }
 
-    public static Logger getLogger(int level) {
-        return Logger.getLogger(new Throwable().getStackTrace()[level].getClassName());
+    public static Logger getMainLogger() {
+        for (StackTraceElement stackTraceElement : new Throwable().getStackTrace()) {
+            String item = stackTraceElement.getClassName();
+            if (item.equals(WSCodeListServiceImpl.class.getName())) {
+                return LogManager.getLogger(WSCodeListServiceImpl.class);
+            } else if (item.equals(WSExecutionServiceImpl.class.getName())) {
+                return LogManager.getLogger(WSExecutionServiceImpl.class);
+            }
+        }
+
+        return LogManager.getRootLogger();
     }
 }

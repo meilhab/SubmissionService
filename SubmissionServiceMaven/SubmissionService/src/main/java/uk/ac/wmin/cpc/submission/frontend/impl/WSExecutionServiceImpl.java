@@ -7,6 +7,7 @@ package uk.ac.wmin.cpc.submission.frontend.impl;
 import java.io.IOException;
 import javax.jws.WebService;
 import javax.xml.bind.JAXBException;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.ggf.schemas.bes._2006._08.bes_factory.InvalidRequestMessageFault;
 import org.ggf.schemas.bes._2006._08.bes_factory.NotAcceptingNewActivitiesFault;
@@ -22,7 +23,6 @@ import uk.ac.wmin.cpc.submission.jsdl.JSDLModificator;
 import uk.ac.wmin.cpc.submission.exceptions.ExecutionException;
 import uk.ac.wmin.cpc.submission.exceptions.FileManagementException;
 import uk.ac.wmin.cpc.submission.exceptions.WrongJSDLException;
-import uk.ac.wmin.cpc.submission.frontend.servlets.LoggerServlet;
 import uk.ac.wmin.cpc.submission.frontend.interfaces.WSExecutionService;
 import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.exceptions.RepositoryCommunicationException;
@@ -38,7 +38,7 @@ import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
         portName = "WSExecutionService")
 public class WSExecutionServiceImpl implements WSExecutionService {
 
-    private static Logger logger = LoggerServlet.getLogger(1);
+    private static Logger logger = LogManager.getLogger(WSExecutionServiceImpl.class);
 
     @Override
     public JobDefinitionType modifyJSDLFile(String urlRepository,

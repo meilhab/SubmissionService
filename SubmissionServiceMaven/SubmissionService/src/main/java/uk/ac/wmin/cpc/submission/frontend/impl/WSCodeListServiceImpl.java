@@ -6,6 +6,7 @@ package uk.ac.wmin.cpc.submission.frontend.impl;
 
 import java.io.IOException;
 import javax.jws.WebService;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.shiwa.repository.submission.interfaces.BeInstance;
 import org.shiwa.repository.submission.interfaces.ImplShort;
@@ -17,7 +18,6 @@ import org.shiwa.repository.submission.service.UnauthorizedException;
 import uk.ac.wmin.cpc.submission.exceptions.ExceptionsManager;
 import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.exceptions.RepositoryCommunicationException;
-import uk.ac.wmin.cpc.submission.frontend.servlets.LoggerServlet;
 import uk.ac.wmin.cpc.submission.frontend.interfaces.WSCodeListService;
 import uk.ac.wmin.cpc.submission.frontend.transferobjects.ExecutorSite;
 import uk.ac.wmin.cpc.submission.frontend.transferobjects.UserAccessConfig;
@@ -33,7 +33,7 @@ import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
         portName = "WSCodeListService")
 public class WSCodeListServiceImpl implements WSCodeListService {
 
-    private static Logger logger = LoggerServlet.getLogger(1);
+    private static Logger logger = LogManager.getLogger(WSCodeListServiceImpl.class);
 
     @Override
     public ImplShort[] getLCIDs(UserAccessConfig userAccess, String urlRepository)

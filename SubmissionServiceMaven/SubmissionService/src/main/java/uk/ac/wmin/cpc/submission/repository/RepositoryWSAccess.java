@@ -39,7 +39,7 @@ public class RepositoryWSAccess {
     private static final int TIMEOUT = 10000;
     private static String serviceLocation;
     private LogText logger = new LogText("REPOSITORYConnection",
-            LoggerServlet.getLogger(2));
+            LoggerServlet.getMainLogger());
 
     public RepositoryWSAccess() throws MalformedURLException {
         this(Configuration.getDefaultRepository());
