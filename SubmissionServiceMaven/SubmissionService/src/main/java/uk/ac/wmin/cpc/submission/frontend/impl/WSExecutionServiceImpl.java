@@ -55,8 +55,7 @@ public class WSExecutionServiceImpl implements WSExecutionService {
             RepositoryWSAccess repository = new RepositoryWSAccess(urlRepository);
             JSDLModificator creator = new JSDLModificator(repository, jsdl);
             return creator.generateNewJSDL();
-        } catch (IllegalArgumentException | JAXBException | NotFoundException |
-                DatabaseProblemException | ForbiddenException | IOException ex) {
+        } catch (Exception ex) {
             ExceptionsManager.managerExceptionsExecutionService(ex, logger);
         }
 

@@ -4,14 +4,10 @@
  */
 package uk.ac.wmin.cpc.submission.jsdl.helpers;
 
-import org.ggf.schemas.jsdl._2005._11.jsdl.OperatingSystemTypeEnumeration;
 import org.shiwa.repository.submission.interfaces.BeInstance;
-import org.shiwa.repository.submission.interfaces.GLite;
-import org.shiwa.repository.submission.interfaces.Gt2;
-import org.shiwa.repository.submission.interfaces.Gt4;
-import org.shiwa.repository.submission.interfaces.Local;
-import org.shiwa.repository.submission.interfaces.Pbs;
+import org.shiwa.repository.submission.service.NotFoundException;
 import uk.ac.wmin.cpc.submission.jsdl.JSDLItem;
+import uri.mbschedulingdescriptionlanguage.DCINameEnumeration;
 
 /**
  *
@@ -21,35 +17,33 @@ public class MiddlewareConfig {
 
     public static void modifySDLType(BeInstance middleware, JSDLItem jsdl)
             throws IllegalArgumentException {
-        jsdl.createSDLType(middleware.getIdBackend().getBackendName(),
-                middleware.getResource(), "");
+        jsdl.createSDLType(MiddlewareExtractor.getDCIName(middleware).value(),
+                MiddlewareExtractor.getResource(middleware), "");
     }
 
-    public static void configurationResource(Gt2 middleware, JSDLItem jsdl) {
-        String hostName = middleware.getSite() + "/" + middleware.getJobManager();
-        jsdl.createResource(hostName,
-                OperatingSystemTypeEnumeration.fromValue(middleware.getIdOS().getName()));
-    }
+    public static void configurationResource(BeInstance middleware, JSDLItem jsdl)
+            throws IllegalArgumentException, NotFoundException {
+        DCINameEnumeration valueEnum = MiddlewareExtractor.getDCIName(middleware);
 
-    public static void configurationResource(Gt4 middleware, JSDLItem jsdl) {
-        String hostName = middleware.getSite() + "/" + middleware.getJobManager();
-        jsdl.createResource(hostName,
-                OperatingSystemTypeEnumeration.fromValue(middleware.getIdOS().getName()));
-    }
-
-    public static void configurationResource(Local middleware, JSDLItem jsdl) {
-        jsdl.createResource("",
-                OperatingSystemTypeEnumeration.fromValue(middleware.getIdOS().getName()));
-    }
-
-    public static void configurationResource(GLite middleware, JSDLItem jsdl) {
-        jsdl.createResource("",
-                OperatingSystemTypeEnumeration.fromValue(middleware.getIdOS().getName()));
-    }
-
-    public static void configurationResource(Pbs middleware, JSDLItem jsdl) {
-        String hostname = middleware.getJobManager() + "/-";
-        jsdl.createResource(hostname,
-                OperatingSystemTypeEnumeration.fromValue(middleware.getIdOS().getName()));
+        switch (valueEnum) {
+            case GT_2:
+            case GT_4:
+                String hostName = MiddlewareExtractor.getSiteName(middleware) + "/"
+                        + MiddlewareExtractor.getJobManager(middleware);
+                jsdl.createResource(hostName, MiddlewareExtractor.getOperatingSystem(middleware));
+                break;
+            case GLITE:
+            case LOCAL:
+                jsdl.createResource("", MiddlewareExtractor.getOperatingSystem(middleware));
+                break;
+            case PBS:
+                String hostname = MiddlewareExtractor.getQueueName(middleware) + "/-";
+                jsdl.createResource(hostname, MiddlewareExtractor.getOperatingSystem(middleware));
+                break;
+            default:
+                throw new NotFoundException(
+                        "No middleware configuration or not supported configuration "
+                        + "detected", null);
+        }
     }
 }

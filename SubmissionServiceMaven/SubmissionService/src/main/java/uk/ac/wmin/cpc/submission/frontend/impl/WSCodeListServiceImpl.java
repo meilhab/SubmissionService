@@ -21,7 +21,7 @@ import uk.ac.wmin.cpc.submission.exceptions.RepositoryCommunicationException;
 import uk.ac.wmin.cpc.submission.frontend.interfaces.WSCodeListService;
 import uk.ac.wmin.cpc.submission.frontend.transferobjects.ExecutorSite;
 import uk.ac.wmin.cpc.submission.frontend.transferobjects.UserAccessConfig;
-import uk.ac.wmin.cpc.submission.jsdl.helpers.DCITools;
+import uk.ac.wmin.cpc.submission.jsdl.helpers.MiddlewareExtractor;
 import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
 
 /**
@@ -50,8 +50,7 @@ public class WSCodeListServiceImpl implements WSCodeListService {
             ImplShort[] responses =
                     repository.getAllPublicValidatedImplementations(userAccess);
             return responses;
-        } catch (UnauthorizedException | DatabaseProblemException |
-                ForbiddenException | IOException ex) {
+        } catch (Exception ex) {
             ExceptionsManager.manageExceptionsCodeListService(ex, logger);
         }
 
@@ -72,7 +71,7 @@ public class WSCodeListServiceImpl implements WSCodeListService {
             RepositoryWSAccess repository = new RepositoryWSAccess(urlRepository);
             String[] responses = repository.getAllWorkflowEngineInstances(lcid);
             return responses;
-        } catch (DatabaseProblemException | ForbiddenException | IOException ex) {
+        } catch (Exception ex) {
             ExceptionsManager.manageExceptionsCodeListService(ex, logger);
         }
 
@@ -93,7 +92,7 @@ public class WSCodeListServiceImpl implements WSCodeListService {
             RepositoryWSAccess repository = new RepositoryWSAccess(urlRepository);
             Parameter[] responses = repository.getAllParameters(lcid);
             return responses;
-        } catch (DatabaseProblemException | ForbiddenException | IOException ex) {
+        } catch (Exception ex) {
             ExceptionsManager.manageExceptionsCodeListService(ex, logger);
         }
 
@@ -117,17 +116,16 @@ public class WSCodeListServiceImpl implements WSCodeListService {
             BeInstance backend = repository.getBackendInstance(implName, siteName);
 
             ExecutorSite executorSite = new ExecutorSite();
-            executorSite.setType(DCITools.getDCIName(backend));
-            executorSite.setResource(backend.getResource());
+            executorSite.setType(MiddlewareExtractor.getDCIName(backend).value());
+            executorSite.setResource(MiddlewareExtractor.getResource(backend));
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Middleware: " + executorSite.getType());
-                logger.debug("Resource: " + executorSite.getResource());
+                logger.debug("Middleware (" + executorSite.getType() + ")");
+                logger.debug("Resource (" + executorSite.getResource() + ")");
             }
 
             return executorSite;
-        } catch (NotFoundException | DatabaseProblemException |
-                ForbiddenException | IOException ex) {
+        } catch (Exception ex) {
             ExceptionsManager.manageExceptionsCodeListService(ex, logger);
         }
 

@@ -14,15 +14,10 @@ import org.ggf.schemas.jsdl._2005._11.jsdl_posix.ArgumentType;
 import org.shiwa.repository.submission.interfaces.AbstractDeployment;
 import org.shiwa.repository.submission.interfaces.BeInstance;
 import org.shiwa.repository.submission.interfaces.ExecutionNode;
-import org.shiwa.repository.submission.interfaces.GLite;
-import org.shiwa.repository.submission.interfaces.Gt2;
-import org.shiwa.repository.submission.interfaces.Gt4;
 import org.shiwa.repository.submission.interfaces.ImplJSDL;
-import org.shiwa.repository.submission.interfaces.Local;
 import org.shiwa.repository.submission.interfaces.OnTheFly;
 import org.shiwa.repository.submission.interfaces.Param;
 import org.shiwa.repository.submission.interfaces.Parameter;
-import org.shiwa.repository.submission.interfaces.Pbs;
 import org.shiwa.repository.submission.interfaces.PreDeploy;
 import org.shiwa.repository.submission.interfaces.WorkflowEngineInstance;
 import org.shiwa.repository.submission.service.NotFoundException;
@@ -45,26 +40,7 @@ public class JSDLHelpers {
         BeInstance middleware = engineInstance.getMiddlewareConfig();
 
         // TODO: add CPUs number here or after
-        if (middleware instanceof Gt2) {
-            MiddlewareConfig.configurationResource(
-                    (Gt2) engineInstance.getMiddlewareConfig(), jsdl);
-        } else if (middleware instanceof Gt4) {
-            MiddlewareConfig.configurationResource(
-                    (Gt4) engineInstance.getMiddlewareConfig(), jsdl);
-        } else if (middleware instanceof Local) {
-            MiddlewareConfig.configurationResource(
-                    (Local) engineInstance.getMiddlewareConfig(), jsdl);
-        } else if (middleware instanceof GLite) {
-            MiddlewareConfig.configurationResource(
-                    (GLite) engineInstance.getMiddlewareConfig(), jsdl);
-        } else if (middleware instanceof Pbs) {
-            MiddlewareConfig.configurationResource(
-                    (Pbs) engineInstance.getMiddlewareConfig(), jsdl);
-        } else {
-            throw new NotFoundException(
-                    "No middleware configuration or not supported configuration "
-                    + "detected", null);
-        }
+        MiddlewareConfig.configurationResource(middleware, jsdl);
         // TODO: add job type MPI here
         MiddlewareConfig.modifySDLType(middleware, jsdl);
     }
@@ -108,8 +84,8 @@ public class JSDLHelpers {
     public static void configureMiddleware(WorkflowEngineInstance instance,
             JSDLItem jsdl) throws NotFoundException, IllegalArgumentException {
         if (instance == null || instance.getMiddlewareConfig() == null
-                || instance.getMiddlewareConfig().getIdBackend() == null
-                || instance.getMiddlewareConfig().getIdBackend().getBackendName() == null) {
+                || instance.getMiddlewareConfig().getName() == null
+                || instance.getMiddlewareConfig().getBackend() == null) {
             throw new NotFoundException("Middleware not configured", null);
         }
 
