@@ -4,7 +4,6 @@
  */
 package uk.ac.wmin.cpc.submission.frontend.impl;
 
-import java.io.IOException;
 import javax.jws.WebService;
 import javax.xml.bind.JAXBException;
 import org.apache.log4j.LogManager;
@@ -14,9 +13,6 @@ import org.ggf.schemas.bes._2006._08.bes_factory.NotAcceptingNewActivitiesFault;
 import org.ggf.schemas.bes._2006._08.bes_factory.NotAuthorizedFault;
 import org.ggf.schemas.bes._2006._08.bes_factory.UnsupportedFeatureFault;
 import org.ggf.schemas.jsdl._2005._11.jsdl.JobDefinitionType;
-import org.shiwa.repository.submission.service.DatabaseProblemException;
-import org.shiwa.repository.submission.service.ForbiddenException;
-import org.shiwa.repository.submission.service.NotFoundException;
 import uk.ac.wmin.cpc.submission.exceptions.ExceptionsManager;
 import uk.ac.wmin.cpc.submission.jsdl.helpers.DCISubmitter;
 import uk.ac.wmin.cpc.submission.jsdl.JSDLModificator;

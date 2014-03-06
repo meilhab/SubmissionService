@@ -4,17 +4,12 @@
  */
 package uk.ac.wmin.cpc.submission.frontend.impl;
 
-import java.io.IOException;
 import javax.jws.WebService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.shiwa.repository.submission.interfaces.BeInstance;
 import org.shiwa.repository.submission.interfaces.ImplShort;
 import org.shiwa.repository.submission.interfaces.Parameter;
-import org.shiwa.repository.submission.service.DatabaseProblemException;
-import org.shiwa.repository.submission.service.ForbiddenException;
-import org.shiwa.repository.submission.service.NotFoundException;
-import org.shiwa.repository.submission.service.UnauthorizedException;
 import uk.ac.wmin.cpc.submission.exceptions.ExceptionsManager;
 import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.exceptions.RepositoryCommunicationException;
