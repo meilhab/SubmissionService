@@ -26,7 +26,7 @@ import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.frontend.helpers.Configuration;
 import uk.ac.wmin.cpc.submission.helpers.LogText;
 import uk.ac.wmin.cpc.submission.helpers.ServiceTools;
-import uk.ac.wmin.cpc.submission.frontend.servlets.LoggerServlet;
+import uk.ac.wmin.cpc.submission.servlets.LoggerServlet;
 import uk.ac.wmin.cpc.submission.frontend.transferobjects.UserAccessConfig;
 
 /**
@@ -37,18 +37,19 @@ public class RepositoryWSAccess {
 
     private static final String WSDL_LOCATION = "SubmissionService?wsdl";
     private static final int TIMEOUT = 10000;
-    private static String serviceLocation;
+    private String serviceLocation;
     private LogText logger = new LogText("REPOSITORYConnection",
             LoggerServlet.getMainLogger());
+    private static final String defaultRepo = Configuration.getPropertiesDataLoaded()
+            .getDEFAULT_REPOSITORY_LOCATION();
 
     public RepositoryWSAccess() throws MalformedURLException {
-        this(Configuration.getDefaultRepository());
+        this(defaultRepo);
     }
 
     public RepositoryWSAccess(String urlRepository) throws MalformedURLException {
         if (urlRepository == null || urlRepository.isEmpty()) {
-            if ((urlRepository = Configuration.getDefaultRepository()) == null
-                    || urlRepository.isEmpty()) {
+            if ((urlRepository = defaultRepo) == null || urlRepository.isEmpty()) {
                 throw new MalformedURLException("Wrong repository URL");
             }
         }

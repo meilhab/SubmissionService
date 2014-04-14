@@ -28,7 +28,8 @@ public class ExecutablePreDeploy {
     private String userFolder;
     private String appFolder;
     private String fileName;
-    private static final String STORAGE = Configuration.getExecutableStorageLocation();
+    private String STORAGE = Configuration.getExecutableStorageLocation();
+    private String server = Configuration.getPropertiesDataLoaded().getSERVER_LOCATION();
 
     public ExecutablePreDeploy(String userFolder, String appFolder, String fileName) {
         this.userFolder = userFolder;
@@ -42,7 +43,7 @@ public class ExecutablePreDeploy {
         if (logger.isDebugEnabled()) {
             logger.log(Level.DEBUG, "STORAGE location recovered (" + STORAGE + ")");
         }
-        
+
         Path pathFile = Paths.get(STORAGE, userFolder);
         FilesHelper.initializeFolder(pathFile.toString());
         if (logger.isDebugEnabled()) {
@@ -80,7 +81,6 @@ public class ExecutablePreDeploy {
     }
 
     public String getURL() {
-        String server = Configuration.getServerLocation();
         return server + (server.endsWith("/") ? "" : "/")
                 + "getFile?userID=" + userFolder
                 + "&folder=" + appFolder;

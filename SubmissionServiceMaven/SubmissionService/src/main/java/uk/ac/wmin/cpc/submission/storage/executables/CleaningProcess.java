@@ -29,9 +29,11 @@ public class CleaningProcess implements Runnable {
 
     public CleaningProcess(String pathToStorage) {
         this.pathToStorage = pathToStorage;
+        String defaultCleaning = Configuration.getPropertiesDataLoaded()
+                .getDEFAULT_CLEANING_EXECUTABLE();
 
         try {
-            int hours = Integer.parseInt(Configuration.getDefaultCleaningExecutable());
+            int hours = Integer.parseInt(defaultCleaning);
             if (hours <= 0) {
                 throw new Exception();
             }

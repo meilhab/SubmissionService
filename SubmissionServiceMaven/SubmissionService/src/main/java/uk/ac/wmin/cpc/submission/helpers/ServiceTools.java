@@ -4,7 +4,7 @@
  */
 package uk.ac.wmin.cpc.submission.helpers;
 
-import uk.ac.wmin.cpc.submission.frontend.servlets.LoggerServlet;
+import uk.ac.wmin.cpc.submission.servlets.LoggerServlet;
 import org.apache.log4j.Logger;
 import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.frontend.transferobjects.UserAccessConfig;

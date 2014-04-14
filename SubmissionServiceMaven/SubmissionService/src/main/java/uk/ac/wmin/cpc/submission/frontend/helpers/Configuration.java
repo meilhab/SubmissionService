@@ -27,29 +27,39 @@ public class Configuration implements ServletContextListener {
     private static String EXECUTABLE_STORAGE_LOCATION;
     private static final String EXECUTABLE_NAME = "execute.bin";
     private static final String FILE_SYSTEM_NAME = "dcibridge.outputs.zip";
-    private static String SERVER_LOCATION;
-    private static String DEFAULT_STORAGE_LOCATION;
-    private static String DEFAULT_REPOSITORY_LOCATION;
-    private static String DEFAULT_DCIBRIDGE_LOCATION;
-    private static String DEFAULT_CLEANING_EXECUTABLE;
-    private static String DEFAULT_LOGGING_MODE;
+    private static PropertiesData propertiesFile;
+    private static PropertiesData xmlFile;
     private ScheduledExecutorService scheduler;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        xmlFile = new PropertiesData();
+        propertiesFile = new PropertiesData();
+
+        System.out.println("XML file loading...");
+        getXMLData(sce);
+        System.out.println("XML file loaded");
+
         try {
-            configurationWithProperties(sce);
+            System.out.println("Properties file loading...");
+            propertiesFile.setPropertiesData(getPropertiesDataFromFile());
             System.out.println("Properties file loaded");
         } catch (Exception ex) {
-            System.out.println("XML Config loaded (" + ex.getMessage() + ")");
-            configurationWithWebXML(sce);
+            System.out.println("Properties file cannot be loaded "
+                    + ex.getMessage() + ")");
+            propertiesFile.setPropertiesData(xmlFile);
         }
 
         treatFolders();
-        saveAsProperties();
+        try {
+            saveAsProperties();
+        } catch (Exception ex) {
+            System.out.println("Cannot write into properties file ("
+                    + ex.getMessage() + ")");
+        }
 
         try {
-            FilesHelper.initializeFolder(DEFAULT_STORAGE_LOCATION);
+            FilesHelper.initializeFolder(propertiesFile.getDEFAULT_STORAGE_LOCATION());
             FilesHelper.initializeFolder(EXECUTABLE_STORAGE_LOCATION);
         } catch (IOException ex) {
         }
@@ -64,69 +74,74 @@ public class Configuration implements ServletContextListener {
         scheduler.shutdownNow();
     }
 
-    private void configurationWithProperties(ServletContextEvent sce) throws Exception {
-        PropertiesManager manager = new PropertiesManager();
-        manager.readProperties();
-        ServletContext context = sce.getServletContext();
-
-        if ((SERVER_LOCATION = manager.getDefaultServerLocation()) == null) {
-            SERVER_LOCATION = context.getInitParameter("server-location");
-        }
-        if ((DEFAULT_DCIBRIDGE_LOCATION = manager.getDefaultDciBridgeLocation()) == null) {
-            DEFAULT_DCIBRIDGE_LOCATION = context.getInitParameter("default-dcibridge-location");
-        }
-        if ((DEFAULT_REPOSITORY_LOCATION = manager.getDefaultRepositoryLocation()) == null) {
-            DEFAULT_REPOSITORY_LOCATION = context.getInitParameter("default-repository-location");
-        }
-        if ((DEFAULT_STORAGE_LOCATION = manager.getDefaultStorageLocation()) == null) {
-            DEFAULT_STORAGE_LOCATION = context.getInitParameter("default-storage-location");
-        }
-        if ((DEFAULT_CLEANING_EXECUTABLE = manager.getDefaultCleaningExecutable()) == null) {
-            DEFAULT_CLEANING_EXECUTABLE = context.getInitParameter("default-cleaning-executable");
-        }
-        if ((DEFAULT_LOGGING_MODE = manager.getDefaultLoggingMode()) == null) {
-            DEFAULT_LOGGING_MODE = context.getInitParameter("default-log4j-level");
-        }
+    public static PropertiesData getPropertiesDataLoaded() {
+        return propertiesFile;
     }
 
-    private void configurationWithWebXML(ServletContextEvent sce) {
+    public static PropertiesData getPropertiesDataFromFile() throws Exception {
+        PropertiesManager manager = new PropertiesManager();
+        manager.readProperties();
+        PropertiesData dataToReturn = new PropertiesData();
+        PropertiesData dataFromFile = manager.getPropertiesData();
+        String property;
+
+        property = dataFromFile.getSERVER_LOCATION();
+        dataToReturn.setSERVER_LOCATION((property != null ? property
+                : xmlFile.getSERVER_LOCATION()));
+
+        property = dataFromFile.getDEFAULT_DCIBRIDGE_LOCATION();
+        dataToReturn.setDEFAULT_DCIBRIDGE_LOCATION((property != null ? property
+                : xmlFile.getDEFAULT_DCIBRIDGE_LOCATION()));
+
+        property = dataFromFile.getDEFAULT_REPOSITORY_LOCATION();
+        dataToReturn.setDEFAULT_REPOSITORY_LOCATION((property != null ? property
+                : xmlFile.getDEFAULT_REPOSITORY_LOCATION()));
+
+        property = dataFromFile.getDEFAULT_STORAGE_LOCATION();
+        dataToReturn.setDEFAULT_STORAGE_LOCATION((property != null ? property
+                : xmlFile.getDEFAULT_STORAGE_LOCATION()));
+
+        property = dataFromFile.getDEFAULT_CLEANING_EXECUTABLE();
+        dataToReturn.setDEFAULT_CLEANING_EXECUTABLE((property != null ? property
+                : xmlFile.getDEFAULT_CLEANING_EXECUTABLE()));
+
+        property = dataFromFile.getDEFAULT_LOGGING_MODE();
+        dataToReturn.setDEFAULT_LOGGING_MODE((property != null ? property
+                : xmlFile.getDEFAULT_LOGGING_MODE()));
+
+        return dataToReturn;
+    }
+
+    private void getXMLData(ServletContextEvent sce) {
         ServletContext context = sce.getServletContext();
 
-        SERVER_LOCATION = context.getInitParameter("server-location");
-        DEFAULT_DCIBRIDGE_LOCATION = context.getInitParameter("default-dcibridge-location");
-        DEFAULT_REPOSITORY_LOCATION = context.getInitParameter("default-repository-location");
-        DEFAULT_STORAGE_LOCATION = context.getInitParameter("default-storage-location");
-        DEFAULT_CLEANING_EXECUTABLE = context.getInitParameter("default-cleaning-executable");
-        DEFAULT_LOGGING_MODE = context.getInitParameter("default-log4j-level");
+        xmlFile.setSERVER_LOCATION(context.getInitParameter("server-location"));
+        xmlFile.setDEFAULT_DCIBRIDGE_LOCATION(context.getInitParameter("default-dcibridge-location"));
+        xmlFile.setDEFAULT_REPOSITORY_LOCATION(context.getInitParameter("default-repository-location"));
+        xmlFile.setDEFAULT_STORAGE_LOCATION(context.getInitParameter("default-storage-location"));
+        xmlFile.setDEFAULT_CLEANING_EXECUTABLE(context.getInitParameter("default-cleaning-executable"));
+        xmlFile.setDEFAULT_LOGGING_MODE(context.getInitParameter("default-log4j-level"));
     }
 
     private void treatFolders() {
-        if (DEFAULT_STORAGE_LOCATION == null) {
-            DEFAULT_STORAGE_LOCATION = "/tmp/submissionService";
+        if (propertiesFile.getDEFAULT_STORAGE_LOCATION() == null) {
+            propertiesFile.setDEFAULT_STORAGE_LOCATION("/tmp/submissionService");
         }
-        DEFAULT_STORAGE_LOCATION += DEFAULT_STORAGE_LOCATION.endsWith("/") ? "" : "/";
+        String defaultStorage = propertiesFile.getDEFAULT_STORAGE_LOCATION();
+        defaultStorage += defaultStorage.endsWith("/") ? "" : "/";
+        propertiesFile.setDEFAULT_STORAGE_LOCATION(defaultStorage);
 
-        EXECUTABLE_STORAGE_LOCATION = DEFAULT_STORAGE_LOCATION + "executables";
+        EXECUTABLE_STORAGE_LOCATION = defaultStorage + "executables";
 
-        Path path = Paths.get(DEFAULT_STORAGE_LOCATION);
+        Path path = Paths.get(defaultStorage);
         System.setProperty("my.log4j.submission", path.getParent().toString()
                 + "/logs");
     }
 
-    private void saveAsProperties() {
-        try {
-            PropertiesManager manager = new PropertiesManager();
-            manager.setDefaultCleaningExecutable(DEFAULT_CLEANING_EXECUTABLE);
-            manager.setDefaultDciBridgeLocation(DEFAULT_DCIBRIDGE_LOCATION);
-            manager.setDefaultLoggingMode(DEFAULT_LOGGING_MODE);
-            manager.setDefaultRepositoryLocation(DEFAULT_REPOSITORY_LOCATION);
-            manager.setDefaultServerLocation(SERVER_LOCATION);
-            manager.setDefaultStorageLocation(DEFAULT_STORAGE_LOCATION);
-            manager.writeProperties();
-        } catch (Exception ex) {
-            System.out.println("Cannot write into properties file ("
-                    + ex.getMessage() + ")");
-        }
+    public static void saveAsProperties() throws Exception {
+        PropertiesManager manager = new PropertiesManager();
+        manager.setPropertiesData(propertiesFile);
+        manager.writeProperties();
     }
 
     public static String getExecutableName() {
@@ -135,22 +150,6 @@ public class Configuration implements ServletContextListener {
 
     public static String getExecutableStorageLocation() {
         return EXECUTABLE_STORAGE_LOCATION;
-    }
-
-    public static String getServerLocation() {
-        return SERVER_LOCATION;
-    }
-
-    public static String getDefaultRepository() {
-        return DEFAULT_REPOSITORY_LOCATION;
-    }
-
-    public static String getDefaultDCIBridge() {
-        return DEFAULT_DCIBRIDGE_LOCATION;
-    }
-
-    public static String getDefaultCleaningExecutable() {
-        return DEFAULT_CLEANING_EXECUTABLE;
     }
 
     public static String getFileSystemName() {

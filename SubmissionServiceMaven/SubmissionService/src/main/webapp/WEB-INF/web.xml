@@ -40,6 +40,11 @@
             <description>access to the log4j servlet</description>
             <url-pattern>/LoggerServlet</url-pattern>
         </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Properties</web-resource-name>
+            <description>access to the reloading properties servlet</description>
+            <url-pattern>/PropertiesServlet</url-pattern>
+        </web-resource-collection>
         <auth-constraint>
             <description>authorization for modification</description>
             <role-name>admin</role-name>

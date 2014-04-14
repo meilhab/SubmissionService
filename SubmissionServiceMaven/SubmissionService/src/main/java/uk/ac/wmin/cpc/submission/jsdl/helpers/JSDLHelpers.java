@@ -23,7 +23,7 @@ import org.shiwa.repository.submission.interfaces.WorkflowEngineInstance;
 import org.shiwa.repository.submission.service.NotFoundException;
 import uk.ac.wmin.cpc.submission.storage.executables.ExecutablePreDeploy;
 import uk.ac.wmin.cpc.submission.frontend.helpers.Configuration;
-import uk.ac.wmin.cpc.submission.frontend.servlets.LoggerServlet;
+import uk.ac.wmin.cpc.submission.servlets.LoggerServlet;
 import uk.ac.wmin.cpc.submission.jsdl.JSDLItem;
 
 /**

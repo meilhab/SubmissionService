@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uk.ac.wmin.cpc.submission.frontend.servlets;
+package uk.ac.wmin.cpc.submission.servlets;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;

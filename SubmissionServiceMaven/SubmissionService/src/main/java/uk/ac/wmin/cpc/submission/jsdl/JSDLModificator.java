@@ -15,7 +15,7 @@ import org.ggf.schemas.jsdl._2005._11.jsdl.JobDefinitionType;
 import org.ggf.schemas.jsdl._2005._11.jsdl_posix.ArgumentType;
 import uk.ac.wmin.cpc.submission.jsdl.helpers.DCITools;
 import uk.ac.wmin.cpc.submission.jsdl.helpers.JSDLExtractor;
-import uk.ac.wmin.cpc.submission.frontend.servlets.LoggerServlet;
+import uk.ac.wmin.cpc.submission.servlets.LoggerServlet;
 import org.shiwa.repository.submission.interfaces.ImplJSDL;
 import org.shiwa.repository.submission.interfaces.Parameter;
 import org.shiwa.repository.submission.interfaces.WorkflowEngineInstance;

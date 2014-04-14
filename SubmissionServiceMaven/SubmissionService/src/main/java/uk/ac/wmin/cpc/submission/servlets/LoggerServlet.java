@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uk.ac.wmin.cpc.submission.frontend.servlets;
+package uk.ac.wmin.cpc.submission.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -46,12 +46,13 @@ public class LoggerServlet extends HttpServlet {
         out.println("Log4j Level Configurator for the submission service<br />");
 
         String level = req.getParameter("level");
-        String reloadFile = req.getParameter("reloadProps");
+        String reloadFile = req.getParameter("reloadLevel");
 
         if (level != null && !level.isEmpty()) {
             setLogLevel(out, level.toUpperCase());
             setLevelToPropertiesFile(level.toUpperCase());
-        } else if (reloadFile != null && !reloadFile.isEmpty()) {
+        } else if (reloadFile != null && !reloadFile.isEmpty()
+                && Boolean.parseBoolean(reloadFile)) {
             if (loadLog4jFile(getServletContext())) {
                 out.println("Log4j reloading successful<br />");
             } else {
@@ -80,10 +81,11 @@ public class LoggerServlet extends HttpServlet {
 
     private boolean loadLog4jFile(ServletContext context) {
         String log4jFile = context.getInitParameter("log4j-file");
+        PrintWriter out = new PrintWriter(System.out);
 
         if (log4jFile != null && !log4jFile.isEmpty()) {
             DOMConfigurator.configure(context.getRealPath(log4jFile));
-            getLevelFromPropertiesFile();
+            setLogLevel(out, getLevelFromPropertiesFile());
             Enumeration<Logger> loggers = LogManager.getCurrentLoggers();
 
             while (loggers != null && loggers.hasMoreElements()) {
@@ -95,23 +97,20 @@ public class LoggerServlet extends HttpServlet {
         }
 
         BasicConfigurator.configure();
-        getLevelFromPropertiesFile();
+        setLogLevel(out, getLevelFromPropertiesFile());
         Logger logger = LogManager.getRootLogger();
         logger.warn("Default log4j loaded (" + logger.getLevel() + ")");
 
         return false;
     }
 
-    private void getLevelFromPropertiesFile() {
+    private String getLevelFromPropertiesFile() {
         try {
             PropertiesManager manager = new PropertiesManager();
             manager.readProperties();
-            String logLevel = manager.getDefaultLoggingMode();
-            if (logLevel != null) {
-                PrintWriter out = new PrintWriter(System.out);
-                setLogLevel(out, logLevel);
-            }
+            return manager.getPropertiesData().getDEFAULT_LOGGING_MODE();
         } catch (Exception ex) {
+            return null;
         }
     }
 
@@ -119,11 +118,11 @@ public class LoggerServlet extends HttpServlet {
         try {
             PropertiesManager manager = new PropertiesManager();
             manager.readProperties();
-            String levelFile = manager.getDefaultLoggingMode();
+            String levelFile = manager.getPropertiesData().getDEFAULT_LOGGING_MODE();
 
             if (getLevel(level) != null && level != null && levelFile != null
                     && !level.equals(levelFile)) {
-                manager.setDefaultLoggingMode(level.toString());
+                manager.getPropertiesData().setDEFAULT_LOGGING_MODE(level.toString());
                 manager.writeProperties();
             }
         } catch (Exception ex) {

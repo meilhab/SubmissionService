@@ -32,9 +32,11 @@ import uk.ac.wmin.cpc.submission.jsdl.JSDLItem;
 public class DCISubmitter {
 
     private SubmitterFace client;
+    private static final String dciBridgeLocation =
+            Configuration.getPropertiesDataLoaded().getDEFAULT_DCIBRIDGE_LOCATION();
 
     public DCISubmitter() {
-        this(Configuration.getDefaultDCIBridge());
+        this(dciBridgeLocation);
     }
 
     public DCISubmitter(String dciBridgeLocation) {
