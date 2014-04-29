@@ -5,6 +5,7 @@
 package uk.ac.wmin.cpc.submission.frontend.helpers;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.Executors;
@@ -124,10 +125,32 @@ public class Configuration implements ServletContextListener {
     }
 
     private void treatFolders() {
-        if (propertiesFile.getDEFAULT_STORAGE_LOCATION() == null) {
-            propertiesFile.setDEFAULT_STORAGE_LOCATION("/tmp/submissionService");
-        }
         String defaultStorage = propertiesFile.getDEFAULT_STORAGE_LOCATION();
+
+        if (defaultStorage == null) {
+            System.out.println("No data for storage location found");
+            defaultStorage = "/tmp/submissionService/storage";
+
+            if (!testIfWritableParent(Paths.get(defaultStorage))) {
+                System.out.println("Submission Service is going to end");
+                System.exit(1);
+            }
+        } else {
+            Path pathStorage = Paths.get(defaultStorage);
+
+            if (!testIfWritableParent(pathStorage)) {
+                pathStorage = Paths.get("/tmp/submissionService/storage");
+
+                if (!testIfWritableParent(pathStorage)) {
+                    System.out.println("Submission Service is going to end");
+                    System.exit(1);
+                }
+
+                defaultStorage = pathStorage.toString();
+            }
+        }
+        System.out.println("(" + defaultStorage + ") chosen");
+
         defaultStorage += defaultStorage.endsWith("/") ? "" : "/";
         propertiesFile.setDEFAULT_STORAGE_LOCATION(defaultStorage);
 
@@ -136,6 +159,30 @@ public class Configuration implements ServletContextListener {
         Path path = Paths.get(defaultStorage);
         System.setProperty("my.log4j.submission", path.getParent().toString()
                 + "/logs");
+    }
+
+    private static boolean testIfWritableParent(Path pathStorage) {
+        if (pathStorage == null) {
+            System.out.println("(null) storage location found");
+            return false;
+        }
+
+        System.out.println("(" + pathStorage.toString()
+                + ") storage location found and is going to be tested");
+        Path existingParent = pathStorage;
+
+        while (existingParent != null && Files.notExists(existingParent)) {
+            System.out.println("Visiting (" + existingParent.toString() + ")");
+            existingParent = existingParent.getParent();
+        }
+
+        if (existingParent == null || !Files.isWritable(existingParent)) {
+            System.out.println("Data cannot be saved at ("
+                    + pathStorage.toString() + ")");
+            return false;
+        }
+
+        return true;
     }
 
     public static void saveAsProperties() throws Exception {
