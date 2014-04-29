@@ -5,6 +5,8 @@
 package uk.ac.wmin.cpc.submission.frontend.helpers;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -48,7 +50,10 @@ public class Configuration implements ServletContextListener {
         } catch (Exception ex) {
             System.out.println("Properties file cannot be loaded ("
                     + ex.getMessage() + ")");
-            propertiesFile.setPropertiesData(xmlFile);
+            PropertiesData dataTemp = new PropertiesData();
+            dataTemp.setPropertiesData(xmlFile);
+            dataTemp.setSERVER_LOCATION(getHostName());
+            propertiesFile.setPropertiesData(dataTemp);
         }
 
         treatFolders();
@@ -87,8 +92,7 @@ public class Configuration implements ServletContextListener {
         String property;
 
         property = dataFromFile.getSERVER_LOCATION();
-        dataToReturn.setSERVER_LOCATION((property != null ? property
-                : xmlFile.getSERVER_LOCATION()));
+        dataToReturn.setSERVER_LOCATION((property != null ? property : getHostName()));
 
         property = dataFromFile.getDEFAULT_DCIBRIDGE_LOCATION();
         dataToReturn.setDEFAULT_DCIBRIDGE_LOCATION((property != null ? property
@@ -184,6 +188,19 @@ public class Configuration implements ServletContextListener {
         }
 
         return true;
+    }
+
+    private static String getHostName() {
+        try {
+            String hostname = InetAddress.getLocalHost().getHostName();
+            hostname = "http://" + hostname + ":8080/SubmissionService";
+            System.out.println("Server location found (" + hostname + ")");
+            return hostname;
+        } catch (UnknownHostException ex) {
+            System.out.println("Server location by default ("
+                    + xmlFile.getSERVER_LOCATION() + ")");
+            return xmlFile.getSERVER_LOCATION();
+        }
     }
 
     public static void saveAsProperties() throws Exception {
