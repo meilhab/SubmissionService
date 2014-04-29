@@ -28,17 +28,22 @@ public class MiddlewareConfig {
         switch (valueEnum) {
             case GT_2:
             case GT_4:
-                String hostName = MiddlewareExtractor.getSiteName(middleware) + "/"
+                String hostNameGt = MiddlewareExtractor.getSiteName(middleware) + "/"
                         + MiddlewareExtractor.getJobManager(middleware);
-                jsdl.createResource(hostName, MiddlewareExtractor.getOperatingSystem(middleware));
+                jsdl.createResource(hostNameGt, MiddlewareExtractor.getOperatingSystem(middleware));
                 break;
             case GLITE:
             case LOCAL:
                 jsdl.createResource("", MiddlewareExtractor.getOperatingSystem(middleware));
                 break;
+            case UNICORE: // TODO: maybe change here according to the tests
+                String hostNameUnicore = MiddlewareExtractor.getGridName(middleware) + "/"
+                        + MiddlewareExtractor.getToolNameAndVersion(middleware);
+                jsdl.createResource(hostNameUnicore, MiddlewareExtractor.getOperatingSystem(middleware));
+                break;
             case PBS:
-                String hostname = MiddlewareExtractor.getQueueName(middleware) + "/-";
-                jsdl.createResource(hostname, MiddlewareExtractor.getOperatingSystem(middleware));
+                String hostnamePBS = MiddlewareExtractor.getQueueName(middleware) + "/-";
+                jsdl.createResource(hostnamePBS, MiddlewareExtractor.getOperatingSystem(middleware));
                 break;
             default:
                 throw new NotFoundException(

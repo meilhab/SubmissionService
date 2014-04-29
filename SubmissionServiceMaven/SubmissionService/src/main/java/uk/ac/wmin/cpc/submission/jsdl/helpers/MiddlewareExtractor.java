@@ -97,6 +97,29 @@ public class MiddlewareExtractor {
         return getAttribute(middleware.getAttributes(), "Queue name");
     }
 
+    public static String getToolNameAndVersion(BeInstance middleware)
+            throws IllegalArgumentException {
+        DCINameEnumeration valueEnum = getDCIName(middleware);
+
+        if (valueEnum != DCINameEnumeration.UNICORE) {
+            throw new IllegalArgumentException("Misconfiguration with UNICORE detected");
+        }
+
+        return getAttribute(middleware.getAttributes(), "Tool name") + " "
+                + getAttribute(middleware.getAttributes(), "Tool version");
+    }
+
+    public static String getGridName(BeInstance middleware)
+            throws IllegalArgumentException {
+        DCINameEnumeration valueEnum = getDCIName(middleware);
+
+        if (valueEnum != DCINameEnumeration.UNICORE) {
+            throw new IllegalArgumentException("Misconfiguration with UNICORE detected");
+        }
+
+        return getAttribute(middleware.getAttributes(), "Grid name");
+    }
+
     private static String getAttribute(List<BeAttr> attributes, String nameAttribute)
             throws IllegalArgumentException {
         if (attributes == null || nameAttribute == null) {
@@ -131,6 +154,8 @@ public class MiddlewareExtractor {
                 return "Resource name";
             case PBS:
                 return "Cluster head node";
+            case UNICORE:
+                return "Grid name";
             default:
                 throw new IllegalArgumentException("(" + valueEnum.value()
                         + ") is not supported by the Submission Service");
