@@ -15,7 +15,7 @@
     </context-param>
     <context-param>
         <param-name>default-storage-location</param-name>
-        <param-value>/srv/submissionService/storage</param-value>
+        <param-value>/srv/submissionService</param-value>
     </context-param>
     <context-param>
         <param-name>server-location</param-name>

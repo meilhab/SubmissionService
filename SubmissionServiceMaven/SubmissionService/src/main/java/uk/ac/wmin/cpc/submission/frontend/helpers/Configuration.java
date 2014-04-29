@@ -46,7 +46,7 @@ public class Configuration implements ServletContextListener {
             propertiesFile.setPropertiesData(getPropertiesDataFromFile());
             System.out.println("Properties file loaded");
         } catch (Exception ex) {
-            System.out.println("Properties file cannot be loaded "
+            System.out.println("Properties file cannot be loaded ("
                     + ex.getMessage() + ")");
             propertiesFile.setPropertiesData(xmlFile);
         }
@@ -129,7 +129,7 @@ public class Configuration implements ServletContextListener {
 
         if (defaultStorage == null) {
             System.out.println("No data for storage location found");
-            defaultStorage = "/tmp/submissionService/storage";
+            defaultStorage = "/tmp/submissionService";
 
             if (!testIfWritableParent(Paths.get(defaultStorage))) {
                 System.out.println("Submission Service is going to end");
@@ -139,7 +139,7 @@ public class Configuration implements ServletContextListener {
             Path pathStorage = Paths.get(defaultStorage);
 
             if (!testIfWritableParent(pathStorage)) {
-                pathStorage = Paths.get("/tmp/submissionService/storage");
+                pathStorage = Paths.get("/tmp/submissionService");
 
                 if (!testIfWritableParent(pathStorage)) {
                     System.out.println("Submission Service is going to end");
@@ -154,10 +154,11 @@ public class Configuration implements ServletContextListener {
         defaultStorage += defaultStorage.endsWith("/") ? "" : "/";
         propertiesFile.setDEFAULT_STORAGE_LOCATION(defaultStorage);
 
-        EXECUTABLE_STORAGE_LOCATION = defaultStorage + "executables";
+        EXECUTABLE_STORAGE_LOCATION =
+                Paths.get(defaultStorage, "storage", "executables").toString();
 
-        Path path = Paths.get(defaultStorage);
-        System.setProperty("my.log4j.submission", path.getParent().toString()
+        Path path = Paths.get(propertiesFile.getDEFAULT_STORAGE_LOCATION());
+        System.setProperty("my.log4j.submission", path.toString()
                 + "/logs");
     }
 
