@@ -27,8 +27,8 @@ public class CleaningProcess implements Runnable {
     private String pathToStorage;
     private int CLEAN_HOURS = 6;
 
-    public CleaningProcess(String pathToStorage) {
-        this.pathToStorage = pathToStorage;
+    public CleaningProcess() {
+        this.pathToStorage = Configuration.getExecutableStorageLocation();
         String defaultCleaning = Configuration.getPropertiesDataLoaded()
                 .getDEFAULT_CLEANING_EXECUTABLE();
 

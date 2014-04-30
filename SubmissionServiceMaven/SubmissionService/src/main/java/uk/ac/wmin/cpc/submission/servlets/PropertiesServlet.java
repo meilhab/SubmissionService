@@ -81,6 +81,8 @@ public class PropertiesServlet extends HttpServlet {
 
             Configuration.getPropertiesDataLoaded().setPropertiesData(dataFile);
             Configuration.saveAsProperties();
+            Configuration.actualizeLog4jLocation();
+            LoggerServlet.loadLog4jFile();
 
             if (logger.isDebugEnabled()) {
                 logger.log(Level.DEBUG, "Saved");
@@ -90,6 +92,7 @@ public class PropertiesServlet extends HttpServlet {
             logger.log(Level.ERROR, "Error detected, rollback process launched");
 
             Configuration.getPropertiesDataLoaded().setPropertiesData(backup);
+            Configuration.actualizeLog4jLocation();
             throw new Exception(ex);
         }
     }

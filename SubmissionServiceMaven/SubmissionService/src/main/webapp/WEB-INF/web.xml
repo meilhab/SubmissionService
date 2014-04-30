@@ -7,7 +7,7 @@
     </session-config>
     <context-param>
         <param-name>log4j-file</param-name>
-        <param-value>WEB-INF/classes/log4j.xml</param-value>
+        <param-value>/log4j.xml</param-value>
     </context-param>
     <context-param>
         <param-name>default-log4j-level</param-name>

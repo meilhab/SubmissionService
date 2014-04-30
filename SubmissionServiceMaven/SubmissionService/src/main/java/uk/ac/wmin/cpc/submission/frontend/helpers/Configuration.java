@@ -27,9 +27,11 @@ import uk.ac.wmin.cpc.submission.storage.executables.CleaningProcess;
 @WebListener
 public class Configuration implements ServletContextListener {
 
-    private static String EXECUTABLE_STORAGE_LOCATION;
+    private static final String STORAGE_LOCATION = "storage";
+    private static String EXECUTABLE_STORAGE_LOCATION = "executables";
     private static final String EXECUTABLE_NAME = "execute.bin";
     private static final String FILE_SYSTEM_NAME = "dcibridge.outputs.zip";
+    private static String LOG4J_FILE;
     private static PropertiesData propertiesFile;
     private static PropertiesData xmlFile;
     private ScheduledExecutorService scheduler;
@@ -41,6 +43,7 @@ public class Configuration implements ServletContextListener {
 
         System.out.println("XML file loading...");
         getXMLData(sce);
+        recoverLog4JFile(sce);
         System.out.println("XML file loaded");
 
         try {
@@ -57,6 +60,7 @@ public class Configuration implements ServletContextListener {
         }
 
         treatFolders();
+        actualizeLog4jLocation();
         try {
             saveAsProperties();
         } catch (Exception ex) {
@@ -65,14 +69,16 @@ public class Configuration implements ServletContextListener {
         }
 
         try {
-            FilesHelper.initializeFolder(propertiesFile.getDEFAULT_STORAGE_LOCATION());
-            FilesHelper.initializeFolder(EXECUTABLE_STORAGE_LOCATION);
+            FilesHelper.initializeFolder(getExecutableStorageLocation());
         } catch (IOException ex) {
+            System.out.println("Storage location for executables cannot be initialized");
+            System.out.println("(" + getExecutableStorageLocation() + ") "
+                    + "not reachable, program is exiting");
+            System.exit(1);
         }
 
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(new CleaningProcess(
-                EXECUTABLE_STORAGE_LOCATION), 0, 1, TimeUnit.HOURS);
+        scheduler.scheduleAtFixedRate(new CleaningProcess(), 0, 1, TimeUnit.HOURS);
     }
 
     @Override
@@ -128,6 +134,17 @@ public class Configuration implements ServletContextListener {
         xmlFile.setDEFAULT_LOGGING_MODE(context.getInitParameter("default-log4j-level"));
     }
 
+    private void recoverLog4JFile(ServletContextEvent sce) {
+        ServletContext context = sce.getServletContext();
+        LOG4J_FILE = context.getInitParameter("log4j-file");
+    }
+
+    public static void actualizeLog4jLocation() {
+        Path path = Paths.get(propertiesFile.getDEFAULT_STORAGE_LOCATION());
+        System.setProperty("my.log4j.submission", path.toString()
+                + "/logs");
+    }
+
     private void treatFolders() {
         String defaultStorage = propertiesFile.getDEFAULT_STORAGE_LOCATION();
 
@@ -154,19 +171,10 @@ public class Configuration implements ServletContextListener {
             }
         }
         System.out.println("(" + defaultStorage + ") chosen");
-
-        defaultStorage += defaultStorage.endsWith("/") ? "" : "/";
         propertiesFile.setDEFAULT_STORAGE_LOCATION(defaultStorage);
-
-        EXECUTABLE_STORAGE_LOCATION =
-                Paths.get(defaultStorage, "storage", "executables").toString();
-
-        Path path = Paths.get(propertiesFile.getDEFAULT_STORAGE_LOCATION());
-        System.setProperty("my.log4j.submission", path.toString()
-                + "/logs");
     }
 
-    private static boolean testIfWritableParent(Path pathStorage) {
+    private boolean testIfWritableParent(Path pathStorage) {
         if (pathStorage == null) {
             System.out.println("(null) storage location found");
             return false;
@@ -214,10 +222,16 @@ public class Configuration implements ServletContextListener {
     }
 
     public static String getExecutableStorageLocation() {
-        return EXECUTABLE_STORAGE_LOCATION;
+        Path pathExec = Paths.get(propertiesFile.getDEFAULT_STORAGE_LOCATION(),
+                STORAGE_LOCATION, EXECUTABLE_STORAGE_LOCATION);
+        return pathExec.toString();
     }
 
     public static String getFileSystemName() {
         return FILE_SYSTEM_NAME;
+    }
+
+    public static String getLog4jFile() {
+        return LOG4J_FILE;
     }
 }

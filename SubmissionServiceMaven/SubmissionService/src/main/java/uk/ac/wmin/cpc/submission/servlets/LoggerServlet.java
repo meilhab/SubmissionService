@@ -6,9 +6,9 @@ package uk.ac.wmin.cpc.submission.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.Enumeration;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +19,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
+import uk.ac.wmin.cpc.submission.frontend.helpers.Configuration;
 import uk.ac.wmin.cpc.submission.frontend.helpers.PropertiesManager;
 import uk.ac.wmin.cpc.submission.frontend.impl.WSCodeListServiceImpl;
 import uk.ac.wmin.cpc.submission.frontend.impl.WSExecutionServiceImpl;
@@ -33,8 +34,7 @@ public class LoggerServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        loadLog4jFile(config.getServletContext());
-
+        loadLog4jFile();
         super.init(config);
     }
 
@@ -53,11 +53,9 @@ public class LoggerServlet extends HttpServlet {
             setLevelToPropertiesFile(level.toUpperCase());
         } else if (reloadFile != null && !reloadFile.isEmpty()
                 && Boolean.parseBoolean(reloadFile)) {
-            if (loadLog4jFile(getServletContext())) {
-                out.println("Log4j reloading successful<br />");
-            } else {
-                out.println("Log4j reloading failure<br />");
-            }
+            out.println((loadLog4jFile()
+                    ? "Log4j reloading successful<br />"
+                    : "Log4j reloading failure<br />"));
         } else {
             setLogLevel(out, null);
             out.println("No parameters given (set log level or reload "
@@ -65,7 +63,7 @@ public class LoggerServlet extends HttpServlet {
         }
     }
 
-    private void setLogLevel(PrintWriter out, String level) {
+    private static void setLogLevel(PrintWriter out, String level) {
         Level log4jLevel = getLevel(level);
         Enumeration<Logger> loggers = LogManager.getCurrentLoggers();
 
@@ -76,15 +74,21 @@ public class LoggerServlet extends HttpServlet {
             }
             out.println("Log level is set to (" + logger.getLevel() + ") for: "
                     + logger.getName() + "<br />");
+
+            if (logger.isDebugEnabled()) {
+                logger.debug("log4j loaded successfully (" + logger.getLevel() + ")");
+            }
         }
     }
 
-    private boolean loadLog4jFile(ServletContext context) {
-        String log4jFile = context.getInitParameter("log4j-file");
+    public static boolean loadLog4jFile() {
+        String log4jFile = Configuration.getLog4jFile();
         PrintWriter out = new PrintWriter(System.out);
+        URL pathLog4jFile;
 
-        if (log4jFile != null && !log4jFile.isEmpty()) {
-            DOMConfigurator.configure(context.getRealPath(log4jFile));
+        if (log4jFile != null && !log4jFile.isEmpty()
+                && (pathLog4jFile = LoggerServlet.class.getResource(log4jFile)) != null) {
+            DOMConfigurator.configure(pathLog4jFile);
             setLogLevel(out, getLevelFromPropertiesFile());
             Enumeration<Logger> loggers = LogManager.getCurrentLoggers();
 
@@ -104,7 +108,7 @@ public class LoggerServlet extends HttpServlet {
         return false;
     }
 
-    private String getLevelFromPropertiesFile() {
+    private static String getLevelFromPropertiesFile() {
         try {
             PropertiesManager manager = new PropertiesManager();
             manager.readProperties();
@@ -129,7 +133,7 @@ public class LoggerServlet extends HttpServlet {
         }
     }
 
-    private Level getLevel(String level) {
+    private static Level getLevel(String level) {
         Level log4jLevel = null;
 
         if (level != null) {
