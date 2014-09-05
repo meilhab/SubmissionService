@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.jsdl.helpers;
 
 import hu.sztaki.lpds.dcibridge.client.SubbmitterJaxWSIMPL;
@@ -26,7 +22,8 @@ import uk.ac.wmin.cpc.submission.frontend.helpers.Configuration;
 import uk.ac.wmin.cpc.submission.jsdl.JSDLItem;
 
 /**
- *
+ * Class allows a submission of a JSDL on a DCI Bridge
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 public class DCISubmitter {
@@ -45,12 +42,32 @@ public class DCISubmitter {
         ((SubbmitterJaxWSIMPL) this.client).setServiceID("/BESFactoryService?wsdl");
     }
 
+    /**
+     * Submit directly a JSDLItem
+     * @param item item representing a JSDL file
+     * @return ID of the submitted workflow
+     * @throws NotAuthorizedFault
+     * @throws NotAcceptingNewActivitiesFault
+     * @throws InvalidRequestMessageFault
+     * @throws UnsupportedFeatureFault
+     * @throws Exception 
+     */
     public String submitJSDLItem(JSDLItem item)
             throws NotAuthorizedFault, NotAcceptingNewActivitiesFault,
             InvalidRequestMessageFault, UnsupportedFeatureFault, Exception {
         return submitActivity(item.getExecutableJSDL());
     }
 
+    /**
+     * Submit a JSDL
+     * @param jobDefinition JSDL to submit
+     * @return ID of the submitted workflow
+     * @throws NotAuthorizedFault
+     * @throws NotAcceptingNewActivitiesFault
+     * @throws InvalidRequestMessageFault
+     * @throws UnsupportedFeatureFault
+     * @throws Exception 
+     */
     public String submitJobDefinition(JobDefinitionType jobDefinition)
             throws NotAuthorizedFault, NotAcceptingNewActivitiesFault,
             InvalidRequestMessageFault, UnsupportedFeatureFault, Exception {
@@ -61,6 +78,16 @@ public class DCISubmitter {
         return submitActivity(activityJsdl);
     }
 
+    /**
+     * Submit a execution enabled JSDL
+     * @param activity execution enabled JSDL
+     * @return ID of the submitted workflow
+     * @throws NotAuthorizedFault
+     * @throws NotAcceptingNewActivitiesFault
+     * @throws InvalidRequestMessageFault
+     * @throws UnsupportedFeatureFault
+     * @throws Exception 
+     */
     private String submitActivity(CreateActivityType activity)
             throws NotAuthorizedFault, NotAcceptingNewActivitiesFault,
             InvalidRequestMessageFault, UnsupportedFeatureFault, Exception {
@@ -70,6 +97,7 @@ public class DCISubmitter {
         return DCITools.getIDFromW3CEndPointReference(idResponse);
     }
 
+    // Get rid of the certificate, can be remove if needed
     static {
         try {
             // Create a trust manager that does not validate certificate chains

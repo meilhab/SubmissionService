@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.helpers;
 
 import uk.ac.wmin.cpc.submission.servlets.LoggerServlet;
@@ -10,11 +6,17 @@ import uk.ac.wmin.cpc.submission.exceptions.IllegalParameterException;
 import uk.ac.wmin.cpc.submission.frontend.transferobjects.UserAccessConfig;
 
 /**
- *
+ * Functions to check the input parameters
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 public class ServiceTools {
 
+    /**
+     * Check a list of data and throw an exception if one is null.
+     * @param data list of different objects.
+     * @throws IllegalParameterException 
+     */
     public static void checkParam(Object... data)
             throws IllegalParameterException {
         Logger logger = LoggerServlet.getMainLogger();
@@ -29,6 +31,11 @@ public class ServiceTools {
         }
     }
 
+    /**
+     * Check specifically if the credentials aren't null. Throw exception if so.
+     * @param userAccessConfig credentials of user and portal
+     * @throws IllegalParameterException 
+     */
     public static void checkUserAccessConfig(UserAccessConfig userAccessConfig)
             throws IllegalParameterException {
         Logger logger = LoggerServlet.getMainLogger();

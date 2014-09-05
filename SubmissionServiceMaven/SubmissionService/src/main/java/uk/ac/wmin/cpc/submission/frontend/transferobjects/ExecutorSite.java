@@ -1,16 +1,19 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.frontend.transferobjects;
 
 /**
- *
+ * Represents the middleware data.
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 public class ExecutorSite {
 
+    /**
+     * Type of middleware (GT2/4, glite, PBS, etc.).
+     */
     private String type;
+    /**
+     * Resource associated to the middleware (WestFocus, vlemed, etc.).
+     */
     private String resource;
 
     public ExecutorSite() {

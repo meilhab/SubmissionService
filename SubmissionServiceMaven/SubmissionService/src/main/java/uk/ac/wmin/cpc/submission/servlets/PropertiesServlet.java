@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.servlets;
 
 import java.io.IOException;
@@ -18,7 +14,9 @@ import uk.ac.wmin.cpc.submission.frontend.helpers.PropertiesData;
 import uk.ac.wmin.cpc.submission.helpers.LogText;
 
 /**
- *
+ * This servlet's goal is to manage the configuration file by reloading it 
+ * when any modification has been applied. This avoid to restart the service.
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 @WebServlet(name = "PropertiesServlet", urlPatterns = {"/PropertiesServlet"})
@@ -55,6 +53,11 @@ public class PropertiesServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Actualise the system configuration from the configuration file.
+     * @param out servlet's output
+     * @throws Exception 
+     */
     private void reloadProperties(PrintWriter out) throws Exception {
         PropertiesData dataFile = Configuration.getPropertiesDataFromFile();
         PropertiesData backup = Configuration.getPropertiesDataLoaded();

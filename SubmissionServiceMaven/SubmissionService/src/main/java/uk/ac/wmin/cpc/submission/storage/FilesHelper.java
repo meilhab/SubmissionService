@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.storage;
 
 import java.io.IOException;
@@ -16,7 +12,8 @@ import org.apache.log4j.Logger;
 import uk.ac.wmin.cpc.submission.helpers.LogText;
 
 /**
- *
+ * This class provides functions to manipulate files and folders.
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 public class FilesHelper {
@@ -24,6 +21,11 @@ public class FilesHelper {
     private static LogText logger = new LogText("STORAGE",
             Logger.getLogger("LoggersManager"));
 
+    /**
+     * Delete a folder and any file under it.
+     * @param folder path of the folder
+     * @throws IOException 
+     */
     public static void deleteFolder(Path folder) throws IOException {
         Files.walkFileTree(folder, new SimpleFileVisitor<Path>() {
             @Override
@@ -46,6 +48,11 @@ public class FilesHelper {
         });
     }
 
+    /**
+     * Create a folder if not existing
+     * @param folderName path to the folder
+     * @throws IOException 
+     */
     public static void initializeFolder(String folderName) throws IOException {
         Path path = Paths.get(folderName);
         if (!Files.exists(path)

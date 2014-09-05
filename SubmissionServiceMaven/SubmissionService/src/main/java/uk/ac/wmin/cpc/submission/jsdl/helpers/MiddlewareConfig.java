@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.jsdl.helpers;
 
 import org.shiwa.repository.submission.interfaces.BeInstance;
@@ -10,17 +6,31 @@ import uk.ac.wmin.cpc.submission.jsdl.JSDLItem;
 import uri.mbschedulingdescriptionlanguage.DCINameEnumeration;
 
 /**
- *
+ * This class manages the configuration of a middleware in the JSDL.
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 public class MiddlewareConfig {
 
+    /**
+     * Create a new SDLType for a given middleware.
+     * @param middleware backend instance corresponding to the middleware
+     * @param jsdl JSDL file to edit
+     * @throws IllegalArgumentException 
+     */
     public static void modifySDLType(BeInstance middleware, JSDLItem jsdl)
             throws IllegalArgumentException {
         jsdl.createSDLType(MiddlewareExtractor.getDCIName(middleware).value(),
                 MiddlewareExtractor.getResource(middleware), "");
     }
 
+    /**
+     * Configure the ResourceType of the JSDl with the middleware information.
+     * @param middleware backend instance corresponding to the middleware
+     * @param jsdl JSDL file to edit
+     * @throws IllegalArgumentException
+     * @throws NotFoundException 
+     */
     public static void configurationResource(BeInstance middleware, JSDLItem jsdl)
             throws IllegalArgumentException, NotFoundException {
         DCINameEnumeration valueEnum = MiddlewareExtractor.getDCIName(middleware);

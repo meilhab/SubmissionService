@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.exceptions;
 
 import java.io.IOException;
@@ -15,11 +11,20 @@ import org.shiwa.repository.submission.service.NotFoundException;
 import org.shiwa.repository.submission.service.UnauthorizedException;
 
 /**
- *
+ * This class is managing the error messages shared between the two web 
+ * services. It simplifies the code in the web services by taking a java 
+ * exception and returning a custom serializable exception.
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 public class ExceptionsManager {
 
+    /**
+     * Treat all common exceptions between services.
+     * @param ex exception caught
+     * @param logger provided logger
+     * @throws IllegalParameterException
+     * @throws RepositoryCommunicationException 
+     */
     private static void commonExceptions(Exception ex, Logger logger)
             throws IllegalParameterException, RepositoryCommunicationException {
         if (ex instanceof MalformedURLException) {
@@ -43,6 +48,14 @@ public class ExceptionsManager {
         } 
     }
 
+    /**
+     * Manage all exceptions for WSCodeListService. Check the common ones and
+     * goes if needed with specifics.
+     * @param ex exception caught
+     * @param logger provided logger
+     * @throws IllegalParameterException
+     * @throws RepositoryCommunicationException 
+     */
     public static void manageExceptionsCodeListService(Exception ex, Logger logger)
             throws IllegalParameterException, RepositoryCommunicationException {
         commonExceptions(ex, logger);
@@ -60,6 +73,16 @@ public class ExceptionsManager {
         }
     }
 
+    /**
+     * Manage all exceptions for WSExecutionService. Check the common ones and
+     * goes if needed with specifics.
+     * @param ex exception caught
+     * @param logger provided logger
+     * @throws IllegalParameterException
+     * @throws RepositoryCommunicationException
+     * @throws WrongJSDLException
+     * @throws FileManagementException 
+     */
     public static void managerExceptionsExecutionService(Exception ex, Logger logger)
             throws IllegalParameterException, RepositoryCommunicationException,
             WrongJSDLException, FileManagementException {

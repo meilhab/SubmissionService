@@ -1,14 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.helpers;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * Class managing the logs. For a given prefix, it adds it for every logs.
+ * Useful for 'utility' logs.
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 public class LogText {

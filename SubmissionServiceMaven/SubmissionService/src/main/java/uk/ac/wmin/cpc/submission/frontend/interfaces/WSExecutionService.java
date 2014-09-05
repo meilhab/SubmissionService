@@ -21,6 +21,17 @@ import uk.ac.wmin.cpc.submission.exceptions.WrongJSDLException;
 @WebService(name = "WSExecutionService")
 public interface WSExecutionService {
 
+    /**
+     * Modify a JSDL file provided by the DCI Bridge in order to integrate
+     * the workflow engine management system from the SHIWA Repository
+     * @param urlRepository repository to contact
+     * @param jsdl JSDL file to modify
+     * @return completed and DCI Bridge submission-enabled JSDL file
+     * @throws IllegalParameterException
+     * @throws WrongJSDLException
+     * @throws RepositoryCommunicationException
+     * @throws FileManagementException 
+     */
     @WebMethod(operationName = "modifyJSDLFile")
     public JobDefinitionType modifyJSDLFile(
             @WebParam(name = "urlRepository") String urlRepository,
@@ -28,6 +39,15 @@ public interface WSExecutionService {
             throws IllegalParameterException, WrongJSDLException,
             RepositoryCommunicationException, FileManagementException;
 
+    /**
+     * Submit a JSDL file to a DCI Bridge and return the ID of the workflow
+     * submitted
+     * @param dciBridgeLocation URL of the DCI Bridge
+     * @param jsdl JSDL file to submit
+     * @return ID of the workflow submitted
+     * @throws IllegalParameterException
+     * @throws ExecutionException 
+     */
     @WebMethod(operationName = "submitToDciBridge")
     public String submitToDciBridge(
             @WebParam(name = "dciBridgeLocation") String dciBridgeLocation,

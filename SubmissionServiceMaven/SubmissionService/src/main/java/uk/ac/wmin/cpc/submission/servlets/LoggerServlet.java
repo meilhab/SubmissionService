@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.servlets;
 
 import java.io.IOException;
@@ -25,7 +21,9 @@ import uk.ac.wmin.cpc.submission.frontend.impl.WSCodeListServiceImpl;
 import uk.ac.wmin.cpc.submission.frontend.impl.WSExecutionServiceImpl;
 
 /**
- *
+ * This servlet's goal is to initialise and reconfigure the logs in the 
+ * SHIWA Submission Service.
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 @WebServlet(name = "LoggerServlet", loadOnStartup = 1,
@@ -49,10 +47,12 @@ public class LoggerServlet extends HttpServlet {
         String reloadFile = req.getParameter("reloadLevel");
 
         if (level != null && !level.isEmpty()) {
+            // reconfigure
             setLogLevel(out, level.toUpperCase());
             setLevelToPropertiesFile(level.toUpperCase());
         } else if (reloadFile != null && !reloadFile.isEmpty()
                 && Boolean.parseBoolean(reloadFile)) {
+            // reload
             out.println((loadLog4jFile()
                     ? "Log4j reloading successful<br />"
                     : "Log4j reloading failure<br />"));
@@ -63,6 +63,11 @@ public class LoggerServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Set all opened loggers to the specified log level.
+     * @param out servlet output
+     * @param level level of the logs
+     */
     private static void setLogLevel(PrintWriter out, String level) {
         Level log4jLevel = getLevel(level);
         Enumeration<Logger> loggers = LogManager.getCurrentLoggers();
@@ -81,6 +86,10 @@ public class LoggerServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Load the log4j file into the system.
+     * @return true if successfully loaded, false otherwise
+     */
     public static boolean loadLog4jFile() {
         String log4jFile = Configuration.getLog4jFile();
         PrintWriter out = new PrintWriter(System.out);
@@ -108,6 +117,10 @@ public class LoggerServlet extends HttpServlet {
         return false;
     }
 
+    /**
+     * Get the logging level from the configuration file.
+     * @return value of the logging level or null
+     */
     private static String getLevelFromPropertiesFile() {
         try {
             PropertiesManager manager = new PropertiesManager();
@@ -118,6 +131,10 @@ public class LoggerServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Set the given logging level into the configuration file.
+     * @param level logging level
+     */
     private void setLevelToPropertiesFile(String level) {
         try {
             PropertiesManager manager = new PropertiesManager();
@@ -133,6 +150,11 @@ public class LoggerServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Get the level associated to the String provided.
+     * @param level logging level in String
+     * @return level as a log4j class
+     */
     private static Level getLevel(String level) {
         Level log4jLevel = null;
 
@@ -168,6 +190,11 @@ public class LoggerServlet extends HttpServlet {
         return log4jLevel;
     }
 
+    /**
+     * Requested by any class, this function returns the main logger class called.
+     * It will return WSCodeListService, WSExecution or Root logger.
+     * @return logger of the main class
+     */
     public static Logger getMainLogger() {
         for (StackTraceElement stackTraceElement : new Throwable().getStackTrace()) {
             String item = stackTraceElement.getClassName();

@@ -12,22 +12,23 @@ import uri.mbschedulingdescriptionlanguage.MiddlewareType;
 import uri.mbschedulingdescriptionlanguage.SDLType;
 
 /**
- *
+ * Class storing a JSDLItem in order to get some specific information
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 public class JSDLExtractor {
 
     private JSDLItem item;
 
-    private enum ExploreMiddleware {
-
-        NAME, SUBMISSION_SERVICE
-    };
-
     public JSDLExtractor(JSDLItem item) {
         this.item = item;
     }
 
+    /**
+     * Get the implementation name of the item.
+     * @return name of the implementation (name#version)
+     * @throws IllegalArgumentException 
+     */
     public String getImplementationName() throws IllegalArgumentException {
         try {
             String completeName = item.getJobIdentification().getJobName();
@@ -39,6 +40,11 @@ public class JSDLExtractor {
         }
     }
 
+    /**
+     * Get the workflow engine instance associated from the candidate hosts.
+     * @return name of the workflow engine instance
+     * @throws IllegalArgumentException 
+     */
     public String getWorkflowEngineInstance() throws IllegalArgumentException {
         try {
             String workflowEngineInstance = item.getResources().
@@ -51,6 +57,11 @@ public class JSDLExtractor {
         }
     }
 
+    /**
+     * Get the middleware configured in the JSDL
+     * @return object representing the middleware
+     * @throws IllegalArgumentException 
+     */
     public DCINameEnumeration getMiddlewareName() throws IllegalArgumentException {
         SDLType metabroker = item.getMetabroker();
 
@@ -68,23 +79,11 @@ public class JSDLExtractor {
         throw new IllegalArgumentException("No middleware information");
     }
 
-    public String getSubmissionServiceLocation() throws IllegalArgumentException {
-        SDLType metabroker = item.getMetabroker();
-
-        if (metabroker != null && metabroker.getConstraints() != null
-                && metabroker.getConstraints().getMiddleware() != null) {
-            List<MiddlewareType> listMiddlewares =
-                    metabroker.getConstraints().getMiddleware();
-
-            if (listMiddlewares != null && listMiddlewares.size() == 1) {
-                MiddlewareType middleware = listMiddlewares.get(0);
-                return middleware.getManagedResource();
-            }
-        }
-
-        throw new IllegalArgumentException("No middleware information");
-    }
-
+    /**
+     * Get the user ID.
+     * @return user ID
+     * @throws IllegalArgumentException 
+     */
     public String getUserID() throws IllegalArgumentException {
         try {
             return item.getPOSIXApplication().getUserName().getValue();
@@ -93,6 +92,12 @@ public class JSDLExtractor {
         }
     }
 
+    /**
+     * Get the storage URL for outputs. Look for the guse.jsdl file that is the
+     * provided JSDL and return its URL
+     * @return URL of the storage place for outputs
+     * @throws IllegalArgumentException 
+     */
     public String getStorageURL() throws IllegalArgumentException {
         try {
             List<DataStagingType> listData = item.getOutputFiles();

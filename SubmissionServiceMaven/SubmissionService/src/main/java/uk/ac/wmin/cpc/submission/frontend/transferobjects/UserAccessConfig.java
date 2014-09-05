@@ -1,12 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.frontend.transferobjects;
 
 import java.io.Serializable;
 
 /**
+ * Data to authenticate a portal and user on the SHIWA Repository and get the 
+ * selected implementations if existing.
  *
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.jsdl;
 
 import uk.ac.wmin.cpc.submission.jsdl.helpers.JSDLHelpers;
@@ -28,6 +24,7 @@ import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
 import uri.mbschedulingdescriptionlanguage.DCINameEnumeration;
 
 /**
+ * This class manages the modification performed on a JSDL file.
  *
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
@@ -46,6 +43,18 @@ public class JSDLModificator {
         this.extractor = quickCheckJSDL(jsdl);
     }
 
+    /**
+     * Main function managing all changes on the JSDL file.
+     * @return new JSDL file ready to be submitted
+     * @throws JAXBException
+     * @throws MalformedURLException
+     * @throws NotFoundException
+     * @throws IllegalArgumentException
+     * @throws DatabaseProblemException
+     * @throws ForbiddenException
+     * @throws IOException
+     * @throws IllegalParameterException 
+     */
     public JobDefinitionType generateNewJSDL()
             throws JAXBException, MalformedURLException, NotFoundException,
             IllegalArgumentException, DatabaseProblemException,
@@ -54,7 +63,7 @@ public class JSDLModificator {
         // modifyPOSIXApplication() -> add executable and arguments?            OK
         // modifyDataStaging()      -> add new inputs                           OK
         // modifyExtensionType()    -> should stay the same                     OK
-        // modifySDLType()          -> according to the workflow engine         KO
+        // modifySDLType()          -> according to the workflow engine         OK
         // modifyResources()        -> according to the workflow engine as well OK
         logger.info("New JSDL generation have been started");
 
@@ -83,19 +92,45 @@ public class JSDLModificator {
             logger.debug(DCITools.getJSDLXML(generatedJSDL));
         }
 
+        // in order to return a correct item, it is required to convert the
+        // JSDL file into string and get it back to JSDL
         return DCITools.readJSDLFromString(DCITools.getJSDLXML(generatedJSDL));
     }
 
+    /**
+     * Get from the SHIWA Repository the full workflow implementation data
+     * @param implName name of the implementation (name#version)
+     * @return full implementation data
+     * @throws MalformedURLException
+     * @throws NotFoundException
+     * @throws DatabaseProblemException
+     * @throws ForbiddenException
+     * @throws IOException
+     * @throws IllegalParameterException 
+     */
     private ImplJSDL getFullImplementation(String implName)
             throws MalformedURLException, NotFoundException,
             DatabaseProblemException, ForbiddenException, IOException,
             IllegalParameterException {
-        // good way could be to call the service or using the client interface
-        // but possibility of conflicts when deployment
         logger.info("Getting " + implName + " from repository");
         return repository.getFullImplJSDL(implName);
     }
 
+    /**
+     * Get from the SHIWA Repository the full workflow engine implementation 
+     * data from a workflow engine name, version and the workflow engine 
+     * implementation name itself.
+     * @param engineName name of the workflow engine
+     * @param engineVersion version of the workflow engine
+     * @param instanceName name of the workflow engine implementation
+     * @return full workflow engine implementation data
+     * @throws MalformedURLException
+     * @throws NotFoundException
+     * @throws DatabaseProblemException
+     * @throws ForbiddenException
+     * @throws IOException
+     * @throws IllegalParameterException 
+     */
     private WorkflowEngineInstance getFullWorkflowEngineInstance(String engineName,
             String engineVersion, String instanceName)
             throws MalformedURLException, NotFoundException,
@@ -105,6 +140,23 @@ public class JSDLModificator {
         return repository.getFullWEIForJSDL(engineName, engineVersion, instanceName);
     }
 
+    /**
+     * Modify the POSIXApplicationType and DataStaging (inputs, outputs) sections.
+     * It adds the workflow engine implementation data such as files and
+     * executables. Also the implementation data with workflow definition file,
+     * special inputs and outputs + replace "Default" value for an input file.
+     * Indeed the portal, when the input file isn't modified, fills the field 
+     * input URL with "Default".
+     * @param implementation full implementation
+     * @param engineInstance full workflow engine implementation
+     * @throws MalformedURLException
+     * @throws NotFoundException
+     * @throws IllegalArgumentException
+     * @throws IOException
+     * @throws DatabaseProblemException
+     * @throws ForbiddenException
+     * @throws IllegalParameterException 
+     */
     private void modifyPOSIXApplicationAndDataStaging(ImplJSDL implementation,
             WorkflowEngineInstance engineInstance) throws MalformedURLException,
             NotFoundException, IllegalArgumentException,
@@ -128,6 +180,14 @@ public class JSDLModificator {
         JSDLHelpers.configureMaxWallTime(implementation, newJSDL);
     }
 
+    /**
+     * Check quickly if the JSDL is correclty configured and using SHIWA as
+     * middleware.
+     * @param jsdl JSDL file to check out
+     * @return JSDL extractor that is a copy of the JSDL with the purpose of
+     * extracting only specific data
+     * @throws IllegalArgumentException 
+     */
     private JSDLExtractor quickCheckJSDL(JobDefinitionType jsdl)
             throws IllegalArgumentException {
         try {
@@ -153,6 +213,20 @@ public class JSDLModificator {
         throw new IllegalArgumentException("JSDL file or dciName wrong");
     }
 
+    /**
+     * Check the consistency between the JSDL inputs/outputs and the 
+     * implementation in the repository. The checking is done with non-fixed
+     * inputs/outputs
+     * @param implementation full implementation
+     * @return list of parameters
+     * @throws MalformedURLException
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws IllegalArgumentException
+     * @throws DatabaseProblemException
+     * @throws IOException
+     * @throws IllegalParameterException 
+     */
     private Parameter[] checkInputOutputs(ImplJSDL implementation)
             throws MalformedURLException, NotFoundException, ForbiddenException,
             IllegalArgumentException, DatabaseProblemException, IOException,
@@ -195,6 +269,13 @@ public class JSDLModificator {
         return params;
     }
 
+    /**
+     * Check if the given value for a port (filename or param name itself) exists
+     * @param portJSDL list of ports from the JSDL
+     * @param argumentValue value of the port (filename)
+     * @param input is the port an input port or not
+     * @throws IllegalArgumentException 
+     */
     private void checkPorts(List<DataStagingType> portJSDL, String argumentValue,
             boolean input) throws IllegalArgumentException {
         boolean check = false;

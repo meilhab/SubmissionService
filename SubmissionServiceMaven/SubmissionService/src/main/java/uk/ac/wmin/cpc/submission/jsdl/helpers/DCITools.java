@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.jsdl.helpers;
 
 import dci.extension.ExtensionType;
@@ -31,7 +27,8 @@ import uri.mbschedulingdescriptionlanguage.MyProxyType;
 import uri.mbschedulingdescriptionlanguage.SDLType;
 
 /**
- *
+ * Set of tools to manage DCI Bridge JSDL notation.
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 public class DCITools {
@@ -49,6 +46,12 @@ public class DCITools {
         CloudResourcesType.class,
         CloudResourceType.class};
 
+    /**
+     * Get the corresponding object from a String being a DCI name.
+     * @param dciName name of the DCI
+     * @return corresponding DCI object
+     * @throws IllegalArgumentException 
+     */
     private static DCINameEnumeration getDCINameFromString(String dciName)
             throws IllegalArgumentException {
         if (dciName == null) {
@@ -65,6 +68,15 @@ public class DCITools {
         return name;
     }
 
+    /**
+     * Configure the middleware item corresponding to a DCI for a JSDL.
+     * @param pType type of middleware
+     * @param pVO resource associated to the middleware
+     * @param pMyProxy proxy for the middleware, usually blank
+     * @return MiddlewareType for the given information in order to add it to 
+     * the JSDL file
+     * @throws IllegalArgumentException 
+     */
     public static MiddlewareType mbsdlMiddleware(String pType, String pVO,
             String pMyProxy) throws IllegalArgumentException {
         MiddlewareType middleware = new MiddlewareType();
@@ -80,6 +92,12 @@ public class DCITools {
         return middleware;
     }
 
+    /**
+     * Convert a JSDL object into a String.
+     * @param pValue JSDL object
+     * @return String of the JSDL
+     * @throws JAXBException 
+     */
     public static String getJSDLXML(JobDefinitionType pValue) throws JAXBException {
         ByteArrayOutputStream res = new ByteArrayOutputStream();
         JAXBContext jc = JAXBContext.newInstance(classes);
@@ -95,6 +113,14 @@ public class DCITools {
         return new String(res.toByteArray());
     }
 
+    /**
+     * Convert a class into a XML element for JAXB.
+     * @param <T> class type
+     * @param ns namespace
+     * @param tag name of the field in the XML
+     * @param o object to convert
+     * @return converted JAXB element for the given class
+     */
     private static <T> JAXBElement<T> wrap(String ns, String tag, T o) {
         QName qtag = new QName(ns, tag, "jsdl");
         Class clazz = o.getClass();
@@ -103,6 +129,11 @@ public class DCITools {
         return jbe;
     }
 
+    /**
+     * Extract an ID from the return of a JSDL submission.
+     * @param endpointReference return of the JSDL submission
+     * @return ID
+     */
     public static String getIDFromW3CEndPointReference(
             W3CEndpointReference endpointReference) {
         if (endpointReference == null) {
@@ -116,6 +147,12 @@ public class DCITools {
         return endpointReference.toString().substring(j0, j1);
     }
 
+    /**
+     * Convert a String value into a JSDL object.
+     * @param pValue String corresponding to the JSDL
+     * @return JSDL object
+     * @throws JAXBException 
+     */
     public static JobDefinitionType readJSDLFromString(String pValue)
             throws JAXBException {
         JAXBContext jc = JAXBContext.newInstance(classes);
@@ -128,6 +165,14 @@ public class DCITools {
         return jsdl;
     }
 
+    /**
+     * Convert a JAXB element into a specific class.
+     * @param <T> class desired
+     * @param element element to convert
+     * @param eClass class to get
+     * @return element converted
+     * @throws JAXBException 
+     */
     public static <T> T extractClass(Element element, T eClass) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(classes);
         Unmarshaller unMarshaller = context.createUnmarshaller();

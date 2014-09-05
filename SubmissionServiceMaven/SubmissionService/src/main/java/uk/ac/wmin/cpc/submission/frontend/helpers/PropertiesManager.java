@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.frontend.helpers;
 
 import java.nio.file.Files;
@@ -10,17 +6,27 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
- *
+ * Manages the properties of the system, reading and writing. Properties are
+ * saved into the home folder of the user.
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 public class PropertiesManager {
 
+    /**
+     * Properties of the system.
+     */
     private PropertiesData listOfProperties;
 
     public PropertiesManager() {
         listOfProperties = new PropertiesData();
     }
 
+    /**
+     * Read the properties from the configuration file or return an exception if
+     * the file doesn't exist.
+     * @throws Exception 
+     */
     public void readProperties() throws Exception {
         Path path = getPropertiesPath();
         if (!Files.exists(path)) {
@@ -47,6 +53,11 @@ public class PropertiesManager {
                 : valueLog.toUpperCase()));
     }
 
+    /**
+     * Check if a String can be converted as an integer or not.
+     * @param integer String to convert
+     * @return the string itself or null if not an integer
+     */
     private String checkInt(String integer) {
         try {
             Integer.parseInt(integer);
@@ -57,6 +68,10 @@ public class PropertiesManager {
         return null;
     }
 
+    /**
+     * Write the properties registered into the configuration file.
+     * @throws Exception 
+     */
     public void writeProperties() throws Exception {
         String idNameProp = "submission.default.";
         Path path = getPropertiesPath();
@@ -73,6 +88,12 @@ public class PropertiesManager {
                 + " Service");
     }
 
+    /**
+     * Insert a property into a properties object.
+     * @param propFile properties object
+     * @param key key for the property to add
+     * @param value value of the key to the property to add
+     */
     private void writeProperty(Properties propFile, String key, String value) {
         if (key != null && value != null) {
             propFile.setProperty(key, value);
@@ -87,6 +108,11 @@ public class PropertiesManager {
         listOfProperties.setPropertiesData(data);
     }
 
+    /**
+     * Get the home folder of the user.
+     * @return the folder location or an exception if not found
+     * @throws Exception 
+     */
     private Path getPropertiesPath() throws Exception {
         String userHome = System.getProperty("user.home");
         if (userHome == null) {

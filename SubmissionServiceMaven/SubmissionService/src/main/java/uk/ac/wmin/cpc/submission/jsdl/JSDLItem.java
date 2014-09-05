@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.jsdl;
 
 import dci.extension.ExtensionType;
@@ -35,24 +31,51 @@ import uri.mbschedulingdescriptionlanguage.ConstraintsType;
 import uri.mbschedulingdescriptionlanguage.SDLType;
 
 /**
+ * This class is the representation of a JSDL file, with all sections that it
+ * integrates. Its purpose is to modify each section according to the needs and
+ * return an assembled class.
  *
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 public class JSDLItem {
 
+    /**
+     * Section JobIdentificationType of the JSDL: Job name and id.
+     */
     private JobIdentificationType jobIdentification;
+    /**
+     * Section ApplicationType of the JSDL: application name and
+     * POSIXApplicationType.
+     */
     private ApplicationType application;
+    /**
+     * Section POSIXApplicationType of the JSDL: executable, output, error,
+     * arguments, etc.
+     */
     private POSIXApplicationType posixApplication;
+    /**
+     * Section ResourcesType of the JSDL: candidate hosts and operating system.
+     */
     private ResourcesType resources;
+    /**
+     * Section DataStagingType of the JSDL: input and outputs.
+     */
     private List<DataStagingType> listData;
+    /**
+     * Section ExtensionType of the JSDL: workflow information (wfi) service and
+     * proxy service.
+     */
     private ExtensionType extension;
+    /**
+     * Section SDLType of the JSDL: middleware information.
+     */
     private SDLType metabroker;
 
     public JSDLItem(JobDefinitionType jsdl)
             throws IllegalArgumentException, JAXBException {
         this.jobIdentification = jsdl.getJobDescription().getJobIdentification();
         this.application = jsdl.getJobDescription().getApplication();
-        this.posixApplication = returnPOSIXApplicationType(application.getAny().get(0));
+        this.posixApplication = returnPOSIXApplicationType(application.getAny());
         this.application.getAny().clear();
         this.resources = jsdl.getJobDescription().getResources();
         this.listData = jsdl.getJobDescription().getDataStaging();
@@ -60,22 +83,46 @@ public class JSDLItem {
         this.metabroker = returnSDLType(jsdl.getAny());
     }
 
+    /**
+     * Set an executable name to the POSIXApplicationType section.
+     *
+     * @param executableName name of the executable
+     */
     public void setApplicationExecutable(String executableName) {
         FileNameType posixExecutable = new FileNameType();
         posixExecutable.setValue(executableName);
         posixApplication.setExecutable(posixExecutable);
     }
 
+    /**
+     * Add an argument to the POSIXApplicationType section.
+     *
+     * @param argument argument to add.
+     */
     public void setApplicationArgument(String argument) {
         ArgumentType prefixArgument = new ArgumentType();
         prefixArgument.setValue(argument);
         posixApplication.getArgument().add(prefixArgument);
     }
 
+    /**
+     * Get all arguments added to the POSIXApplicationType section.
+     *
+     * @return list of arguments
+     */
     public List<ArgumentType> getApplicationArguments() {
         return posixApplication.getArgument();
     }
 
+    /**
+     * Add a new input file to the JSDL.
+     *
+     * @param name name of the input file
+     * @param creationFlag behaviour when created (default: overwrite)
+     * @param deletionFlag behaviour when the workflow has finished its
+     * execution (default: true)
+     * @param inputURL URL where the input file can be found
+     */
     public void addNewInputFile(String name, CreationFlagEnumeration creationFlag,
             boolean deletionFlag, String inputURL) {
         DataStagingType dataInput = new DataStagingType();
@@ -90,6 +137,17 @@ public class JSDLItem {
         listData.add(dataInput);
     }
 
+    /**
+     * Add a new output file to the JSDL.
+     *
+     * @param name name of the output file
+     * @param fileSystemName name of the file that is supposed to contain this
+     * output file (default: see Configuration.FILE_SYSTEM_NAME)
+     * @param creationFlag behaviour when created (default: overwrite)
+     * @param deletionFlag behaviour when the workflow has finished its
+     * execution (default: true)
+     * @param outputURL URL where the output file has to be uploaded
+     */
     public void addNewOutputFile(String name, String fileSystemName,
             CreationFlagEnumeration creationFlag, boolean deletionFlag,
             String outputURL) {
@@ -106,6 +164,11 @@ public class JSDLItem {
         listData.add(dataOutput);
     }
 
+    /**
+     * Get the list of all input files.
+     *
+     * @return input files list
+     */
     public List<DataStagingType> getInputFiles() {
         List<DataStagingType> listInputs = new ArrayList<>();
 
@@ -118,6 +181,11 @@ public class JSDLItem {
         return listInputs;
     }
 
+    /**
+     * Get the list of all output files.
+     *
+     * @return output files list
+     */
     public List<DataStagingType> getOutputFiles() {
         List<DataStagingType> listOutputs = new ArrayList<>();
 
@@ -130,6 +198,14 @@ public class JSDLItem {
         return listOutputs;
     }
 
+    /**
+     * Create a new SDLType section containing data about the middleware.
+     *
+     * @param dciType type of middleware
+     * @param gridVO resource associated to this middleware
+     * @param gridProxy leave it blank by default
+     * @throws IllegalArgumentException
+     */
     public void createSDLType(String dciType, String gridVO, String gridProxy)
             throws IllegalArgumentException {
         metabroker = new SDLType();
@@ -146,6 +222,13 @@ public class JSDLItem {
 //
 //        metabroker.getConstraints().getJobType().add(JobTypeEnumeration.MPI);
 //    }
+    /**
+     * Create a new ResourceType section containing data about candidate hosts
+     * and operating system.
+     *
+     * @param hostName hostname to add to the section
+     * @param operatingSystem operating system for the JSDL
+     */
     public void createResource(String hostName,
             OperatingSystemTypeEnumeration operatingSystem) {
         CandidateHostsType candidateHostsType = new CandidateHostsType();
@@ -174,6 +257,13 @@ public class JSDLItem {
 //        valueCPU.setUpperBoundedRange(boundedValue);
 //        resources.setTotalCPUCount(valueCPU);
 //    }
+    /**
+     * Add a walltime value for an execution. Note that this is not supported by
+     * the DCI Bridge yet.
+     *
+     * @param value value of the walltime > 0
+     * @throws IllegalArgumentException
+     */
     public void addMaxWallTimeValue(int value) throws IllegalArgumentException {
         if (posixApplication == null || value <= 0) {
             throw new IllegalArgumentException("MaxWallTime incorrect or "
@@ -185,6 +275,12 @@ public class JSDLItem {
         posixApplication.setWallTimeLimit(limit);
     }
 
+    /**
+     * Get a JSDL ready to be executed.
+     *
+     * @return activity ready for execution representing the JSDL
+     * @throws JAXBException
+     */
     public CreateActivityType getExecutableJSDL()
             throws JAXBException {
         JobDefinitionType jsdl = getCompleteJSDL();
@@ -196,6 +292,11 @@ public class JSDLItem {
         return activityJsdl;
     }
 
+    /**
+     * Get a complete JSDL file with all modified information actualised.
+     *
+     * @return the JSDL updated
+     */
     public JobDefinitionType getCompleteJSDL() {
         JobDefinitionType jsdl = new JobDefinitionType();
 
@@ -210,7 +311,7 @@ public class JSDLItem {
 
         jsdl.getJobDescription().getApplication().getAny().
                 add(new JAXBElement(new QName("http://schemas.ggf.org/jsdl/2005/11/jsdl-posix",
-                "POSIXApplication_Type"), POSIXApplicationType.class, posixApplication));
+                                        "POSIXApplication_Type"), POSIXApplicationType.class, posixApplication));
         jsdl.getAny().add(new JAXBElement(
                 new QName("uri:MBSchedulingDescriptionLanguage", "SDL_Type"),
                 metabroker.getClass(), metabroker));
@@ -221,19 +322,36 @@ public class JSDLItem {
         return jsdl;
     }
 
-    private POSIXApplicationType returnPOSIXApplicationType(Object object)
+    /**
+     * Get the POSIXApplicationType section from a JSDL.
+     *
+     * @param anyObjects object corresponding to the ApplicationType.getAny()
+     * @return POSIXApplicationType section or exception thrown.
+     * @throws JAXBException
+     */
+    private POSIXApplicationType returnPOSIXApplicationType(List<Object> anyObjects)
             throws JAXBException {
         posixApplication = new POSIXApplicationType();
-        Element element = (Element) object;
 
-        if (element != null && element.getNamespaceURI().
-                equals("http://schemas.ggf.org/jsdl/2005/11/jsdl-posix")) {
-            return DCITools.extractClass(element, posixApplication);
+        for (Object object : anyObjects) {
+            Element element = (Element) object;
+            
+            if (element != null && element.getNamespaceURI().
+                    equals("http://schemas.ggf.org/jsdl/2005/11/jsdl-posix")) {
+                return DCITools.extractClass(element, posixApplication);
+            }
         }
 
         throw new JAXBException("POSIXApplication not found");
     }
 
+    /**
+     * Get the ExtensionType section from a JSDL.
+     *
+     * @param anyObjects object corresponding to the jsdl.getAny()
+     * @return ExtensionType section or exception thrown.
+     * @throws JAXBException
+     */
     private ExtensionType returnExtensionType(List<Object> anyObjects)
             throws JAXBException {
         extension = new ExtensionType();
@@ -249,6 +367,13 @@ public class JSDLItem {
         throw new JAXBException("Extension not found");
     }
 
+    /**
+     * Get the SDLType section from a JSDL.
+     *
+     * @param anyObjects object corresponding to the jsdl.getAny()
+     * @return SDLType section or exception thrown.
+     * @throws JAXBException
+     */
     private SDLType returnSDLType(List<Object> anyObjects)
             throws JAXBException {
         metabroker = new SDLType();

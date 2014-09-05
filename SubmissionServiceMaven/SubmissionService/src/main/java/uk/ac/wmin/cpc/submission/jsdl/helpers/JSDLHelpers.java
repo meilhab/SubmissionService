@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.jsdl.helpers;
 
 import java.io.IOException;
@@ -27,6 +23,7 @@ import uk.ac.wmin.cpc.submission.servlets.LoggerServlet;
 import uk.ac.wmin.cpc.submission.jsdl.JSDLItem;
 
 /**
+ * Class providing functions to check a JSDL file but also modify it.
  *
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
@@ -34,6 +31,14 @@ public class JSDLHelpers {
 
     private static Logger logger = LoggerServlet.getMainLogger();
 
+    /**
+     * Modify the ResourceType and SDLType sections of a JSDLItem according to
+     * a given workflow engine implementation.
+     * @param engineInstance workflow engine implementation
+     * @param jsdl provided JSDL to modify
+     * @throws NotFoundException
+     * @throws IllegalArgumentException 
+     */
     private static void modifyResourcesAndSDLType(
             WorkflowEngineInstance engineInstance, JSDLItem jsdl)
             throws NotFoundException, IllegalArgumentException {
@@ -45,12 +50,22 @@ public class JSDLHelpers {
         MiddlewareConfig.modifySDLType(middleware, jsdl);
     }
 
+    /**
+     * Check if an implementation is not empty
+     * @param implementation full implementation to check
+     * @return true if correct, false otherwise
+     */
     private static boolean checkImplementation(ImplJSDL implementation) {
         return implementation != null && implementation.getExecutionNode() != null
                 && implementation.getWorkflowEngineName() != null
                 && implementation.getWorkflowEngineVersion() != null;
     }
 
+    /**
+     * Check if an woorkflow engine implementation is not empty
+     * @param instance full workflow engine implementation to check
+     * @return true if correct, false otherwise
+     */
     private static boolean checkWorkflowEngineInstance(WorkflowEngineInstance instance) {
         return instance != null && instance.getDeploymentConfig() != null
                 && instance.getMiddlewareConfig() != null
@@ -58,6 +73,13 @@ public class JSDLHelpers {
                 && instance.getWorkflowEngineVersion() != null;
     }
 
+    /**
+     * Check if implementation and workflow engine implementation taken from 
+     * the SHIWA Repository are correctly configured.
+     * @param implementation full implementation to check
+     * @param engineInstance full workflow engine implementation to check
+     * @throws IllegalArgumentException 
+     */
     public static void checkRepositoryData(ImplJSDL implementation,
             WorkflowEngineInstance engineInstance)
             throws IllegalArgumentException {
@@ -81,6 +103,14 @@ public class JSDLHelpers {
         }
     }
 
+    /**
+     * Check and configure the ResourceType and SDLType sections of a JSDL
+     * according to the workflow engine implementation given
+     * @param instance workflow engine implementation
+     * @param jsdl JSDL to modify
+     * @throws NotFoundException
+     * @throws IllegalArgumentException 
+     */
     public static void configureMiddleware(WorkflowEngineInstance instance,
             JSDLItem jsdl) throws NotFoundException, IllegalArgumentException {
         if (instance == null || instance.getMiddlewareConfig() == null
@@ -92,6 +122,18 @@ public class JSDLHelpers {
         JSDLHelpers.modifyResourcesAndSDLType(instance, jsdl);
     }
 
+    /**
+     * Configure the executable of the JSDL according to the deployment strategy.
+     * If pre-deploy, then a special executable file is created and added to the
+     * JSDL, if On-The-Fly then the workflow engine implementation data are added
+     * to the JSDL. Add also the definition file of the implementation to the
+     * JSDL
+     * @param implementation full implementation
+     * @param instance full workflow engine implementation
+     * @param jsdl JSDL item to modify
+     * @param userID ID of the user that is submitting the workflow
+     * @throws IOException 
+     */
     public static void configureExecutable(ImplJSDL implementation,
             WorkflowEngineInstance instance, JSDLItem jsdl, String userID)
             throws IOException {
@@ -126,6 +168,17 @@ public class JSDLHelpers {
                 implementation.getDefinitionFilePath());
     }
 
+    /**
+     * Format parameters (inputs/outputs/cmd line arguments) in the JSDL. 
+     * Complete the list of arguments, add missing fixed parameters and 
+     * merge non-fixed with their new values.
+     * FIXME: replace the JSDLExtractor by a String: extractor.getStorageURL()
+     * @param implementation
+     * @param paramsNonFixed
+     * @param jsdl
+     * @param extractor JSDL extractor for the storage path
+     * @throws IllegalArgumentException 
+     */
     public static void treatParameters(ImplJSDL implementation,
             Parameter[] paramsNonFixed, JSDLItem jsdl, JSDLExtractor extractor)
             throws IllegalArgumentException {
@@ -146,7 +199,8 @@ public class JSDLHelpers {
 
         for (Param parameter : allParameters) {
             if (parameter.isInput()) {
-                treatInputs(parameter, argumentsInputs, paramsNonFixed, nonFixedJSDL, jsdl);
+                treatInputs(parameter, argumentsInputs, paramsNonFixed, 
+                        nonFixedJSDL, jsdl);
             } else {
                 treatOutputs(parameter, argumentsOutputs, portalURL, jsdl);
             }
@@ -155,6 +209,20 @@ public class JSDLHelpers {
         treatArguments(jsdl, argumentsInputs, argumentsOutputs);
     }
 
+    /**
+     * For a given input parameter, add it to the JSDL and format it correctly
+     * in the list of arguments. All non-fixed parameters have their values as
+     * arguments in the JSDL but not the name associated to them, so for all 
+     * non-fixed parameters, the association between the value and the 
+     * parameter has to be done.
+     * @param parameter input parameter to treat
+     * @param argumentsInputs list of input arguments (command line)
+     * @param paramsNonFixed list of non-fixed parameters from the 
+     * SHIWA Repository
+     * @param nonFixedJSDL list of non-fixed arguments from the JSDL
+     * @param jsdl JSDL file to edit
+     * @throws IllegalArgumentException 
+     */
     private static void treatInputs(Param parameter, List<String> argumentsInputs,
             Parameter[] paramsNonFixed, List<ArgumentType> nonFixedJSDL, JSDLItem jsdl)
             throws IllegalArgumentException {
@@ -204,6 +272,14 @@ public class JSDLHelpers {
         }
     }
 
+    /**
+     * For a given output parameter, add it to the JSDL and format it correctly
+     * in the list of arguments.
+     * @param parameter output parameter to treat
+     * @param argumentsOutputs list of output arguments (command line)
+     * @param portalURL storage place for output files
+     * @param jsdl JSDL file to edit
+     */
     private static void treatOutputs(Param parameter, List<String> argumentsOutputs,
             String portalURL, JSDLItem jsdl) {
         if (logger.isDebugEnabled()) {
@@ -230,6 +306,15 @@ public class JSDLHelpers {
         } // not taking non file
     }
 
+    /**
+     * Get the value for a parameter. Values can be different from the default.
+     * This function associate a value to the parameter.
+     * @param paramsNFImpl parameters non-fixed from the repository
+     * @param paramsNFJSDL parameters non-fixed from the JSDL
+     * @param param parameter concerned
+     * @return value for the concerned parameter
+     * @throws IllegalArgumentException 
+     */
     private static String getValueArgument(Parameter[] paramsNFImpl,
             List<ArgumentType> paramsNFJSDL, Param param)
             throws IllegalArgumentException {
@@ -251,6 +336,12 @@ public class JSDLHelpers {
                 + " the repository data and the JSDL");
     }
 
+    /**
+     * Add command lines arguments (for inputs and outputs) to the JSDL
+     * @param jsdl JSDL file
+     * @param argumentsInputs list of command line arguments for the inputs
+     * @param argumentsOutputs list of command line arguments for the ouputs
+     */
     private static void treatArguments(JSDLItem jsdl,
             List<String> argumentsInputs, List<String> argumentsOutputs) {
         logger.info("New Arguments generated for POSIXApplication JSDL");
@@ -270,6 +361,14 @@ public class JSDLHelpers {
         }
     }
 
+    /**
+     * Add the definition file of the workflow to the JSDL file. According to the
+     * workflow engine implementation used, this workflow can have a prefix
+     * when called from the workflow engine implementation executable script.
+     * @param engineInstance workflow engine implementation
+     * @param implementation implementation
+     * @param jsdl JSDL file
+     */
     public static void configureDefinition(WorkflowEngineInstance engineInstance,
             ImplJSDL implementation, JSDLItem jsdl) {
 
@@ -280,6 +379,11 @@ public class JSDLHelpers {
         jsdl.getApplicationArguments().add(0, argumentDefinition);
     }
 
+    /**
+     * Configure the maxWallTime for the JSDL
+     * @param implJSDL implementation containing the maxWallTime value
+     * @param jsdl JSDL file to complete
+     */
     public static void configureMaxWallTime(ImplJSDL implJSDL, JSDLItem jsdl) {
         try {
             jsdl.addMaxWallTimeValue(implJSDL.getExecutionNode().getMaxWallTime());

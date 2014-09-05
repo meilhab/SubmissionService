@@ -20,7 +20,10 @@ import uk.ac.wmin.cpc.submission.jsdl.helpers.MiddlewareExtractor;
 import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
 
 /**
- *
+ * Implementation of the WSCodeList Service. This web service requests data from
+ * the SHIWA Repository or a test SHIWA Repository concerning implementation and
+ * workflow engine implementations.
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 @WebService(endpointInterface = "uk.ac.wmin.cpc.submission.frontend."
@@ -28,7 +31,7 @@ import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
         portName = "WSCodeListService")
 public class WSCodeListServiceImpl implements WSCodeListService {
 
-    private static Logger logger = LogManager.getLogger(WSCodeListServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(WSCodeListServiceImpl.class);
 
     @Override
     public ImplShort[] getLCIDs(UserAccessConfig userAccess, String urlRepository)

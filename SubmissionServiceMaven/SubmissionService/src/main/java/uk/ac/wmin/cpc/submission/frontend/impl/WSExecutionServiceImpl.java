@@ -26,7 +26,10 @@ import uk.ac.wmin.cpc.submission.jsdl.helpers.DCITools;
 import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
 
 /**
- *
+ * Implementation of the WSExecutionService. This service modifies a JSDL file
+ * into a new one that can be submitted on a DCI Bridge. It also allows the 
+ * JSDL submission for a specified DCI Bridge.
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 @WebService(endpointInterface = "uk.ac.wmin.cpc.submission.frontend."
@@ -34,7 +37,7 @@ import uk.ac.wmin.cpc.submission.repository.RepositoryWSAccess;
         portName = "WSExecutionService")
 public class WSExecutionServiceImpl implements WSExecutionService {
 
-    private static Logger logger = LogManager.getLogger(WSExecutionServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(WSExecutionServiceImpl.class);
 
     @Override
     public JobDefinitionType modifyJSDLFile(String urlRepository,

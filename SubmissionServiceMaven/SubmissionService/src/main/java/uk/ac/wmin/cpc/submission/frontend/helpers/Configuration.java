@@ -21,19 +21,49 @@ import uk.ac.wmin.cpc.submission.storage.FilesHelper;
 import uk.ac.wmin.cpc.submission.storage.executables.CleaningProcess;
 
 /**
- *
+ * This class manages the configuration of the SubmissionService.
+ * It initialises the service with default web.xml configuration and uses if 
+ * existing a properties file.
+ * It manages all common variables for different classes.
+ * It also launches the cleaning process for generated executables.
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 @WebListener
 public class Configuration implements ServletContextListener {
 
+    /**
+     * Default storage folder name.
+     */
     private static final String STORAGE_LOCATION = "storage";
-    private static String EXECUTABLE_STORAGE_LOCATION = "executables";
+    /**
+     * Default executables folder name.
+     */
+    private static final String EXECUTABLE_STORAGE_LOCATION = "executables";
+    /**
+     * Default name for generated executables.
+     */
     private static final String EXECUTABLE_NAME = "execute.bin";
+    /**
+     * default file name of DCI Bridge output. 
+     * Might be possible to get rid of it in the future.
+     */
     private static final String FILE_SYSTEM_NAME = "dcibridge.outputs.zip";
+    /**
+     * Log4J file location.
+     */
     private static String LOG4J_FILE;
+    /**
+     * Contents of the properties configuration file.
+     */
     private static PropertiesData propertiesFile;
+    /**
+     * Contents of the web.xml file.
+     */
     private static PropertiesData xmlFile;
+    /**
+     * Scheduler for the cleaning process.
+     */
     private ScheduledExecutorService scheduler;
 
     @Override
@@ -86,10 +116,20 @@ public class Configuration implements ServletContextListener {
         scheduler.shutdownNow();
     }
 
+    /**
+     * Get the loaded configuration properties
+     * @return properties
+     */
     public static PropertiesData getPropertiesDataLoaded() {
         return propertiesFile;
     }
 
+    /**
+     * Get the properties from the configuration file if exists or merge them
+     * with the default web.xml file.
+     * @return properties of the system
+     * @throws Exception 
+     */
     public static PropertiesData getPropertiesDataFromFile() throws Exception {
         PropertiesManager manager = new PropertiesManager();
         manager.readProperties();
@@ -123,6 +163,10 @@ public class Configuration implements ServletContextListener {
         return dataToReturn;
     }
 
+    /**
+     * Get the web.xml configuration
+     * @param sce context of the servlet
+     */
     private void getXMLData(ServletContextEvent sce) {
         ServletContext context = sce.getServletContext();
 
@@ -134,17 +178,27 @@ public class Configuration implements ServletContextListener {
         xmlFile.setDEFAULT_LOGGING_MODE(context.getInitParameter("default-log4j-level"));
     }
 
+    /**
+     * Get the log4j file name
+     * @param sce 
+     */
     private void recoverLog4JFile(ServletContextEvent sce) {
         ServletContext context = sce.getServletContext();
         LOG4J_FILE = context.getInitParameter("log4j-file");
     }
 
+    /**
+     * Changes the storage location for the logs.
+     */
     public static void actualizeLog4jLocation() {
         Path path = Paths.get(propertiesFile.getDEFAULT_STORAGE_LOCATION());
         System.setProperty("my.log4j.submission", path.toString()
                 + "/logs");
     }
 
+    /**
+     * Setup the storage location.
+     */
     private void treatFolders() {
         String defaultStorage = propertiesFile.getDEFAULT_STORAGE_LOCATION();
 
@@ -174,6 +228,11 @@ public class Configuration implements ServletContextListener {
         propertiesFile.setDEFAULT_STORAGE_LOCATION(defaultStorage);
     }
 
+    /**
+     * Test if the storage place can be writable for the application.
+     * @param pathStorage path to the storage location
+     * @return true if writable, false otherwise
+     */
     private boolean testIfWritableParent(Path pathStorage) {
         if (pathStorage == null) {
             System.out.println("(null) storage location found");
@@ -198,6 +257,10 @@ public class Configuration implements ServletContextListener {
         return true;
     }
 
+    /**
+     * Get default hostname where the service is launched.
+     * @return default hostname for the submission service
+     */
     private static String getHostName() {
         try {
             String hostname = InetAddress.getLocalHost().getHostName();
@@ -211,6 +274,10 @@ public class Configuration implements ServletContextListener {
         }
     }
 
+    /**
+     * Save the properties configuration file
+     * @throws Exception 
+     */
     public static void saveAsProperties() throws Exception {
         PropertiesManager manager = new PropertiesManager();
         manager.setPropertiesData(propertiesFile);

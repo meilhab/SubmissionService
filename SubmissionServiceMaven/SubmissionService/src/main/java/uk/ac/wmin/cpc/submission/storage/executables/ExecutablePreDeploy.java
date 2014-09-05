@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.storage.executables;
 
 import java.io.IOException;
@@ -17,7 +13,9 @@ import uk.ac.wmin.cpc.submission.helpers.LogText;
 import uk.ac.wmin.cpc.submission.storage.FilesHelper;
 
 /**
- *
+ * This class manages the creation of the executable in the storage place
+ * for a pre-deploy configuration.
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 public class ExecutablePreDeploy {
@@ -37,6 +35,10 @@ public class ExecutablePreDeploy {
         this.fileName = fileName;
     }
 
+    /**
+     * Create a new executable under the $STORAGE/userID/TEMPFile.
+     * @throws IOException 
+     */
     public void createFile() throws IOException {
         // user folder
         FilesHelper.initializeFolder(STORAGE);
@@ -71,6 +73,11 @@ public class ExecutablePreDeploy {
         writeIntoFile("#!/bin/bash\n");
     }
 
+    /**
+     * Write a new command into the created executable.
+     * @param message command to write
+     * @throws IOException 
+     */
     public void writeIntoFile(String message) throws IOException {
         OpenOption[] options = {
             StandardOpenOption.APPEND,
@@ -80,6 +87,10 @@ public class ExecutablePreDeploy {
         Files.write(this.filePath, buffer, options);
     }
 
+    /**
+     * Get the URL to access the executable via the getFile servlet.
+     * @return URL to download the file
+     */
     public String getURL() {
         return server + (server.endsWith("/") ? "" : "/")
                 + "getFile?userID=" + userFolder

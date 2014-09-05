@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.repository;
 
 import java.io.IOException;
@@ -30,6 +26,8 @@ import uk.ac.wmin.cpc.submission.servlets.LoggerServlet;
 import uk.ac.wmin.cpc.submission.frontend.transferobjects.UserAccessConfig;
 
 /**
+ * This class manages the connection to the Repository. It communicates 
+ * directly with the remote web service.
  *
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
@@ -47,6 +45,11 @@ public class RepositoryWSAccess {
         this(defaultRepo);
     }
 
+    /**
+     * Instanciate the repository.
+     * @param urlRepository be like (http://shiwa-repo.cpc.wmin.ac.uk/shiwa-repo)
+     * @throws MalformedURLException 
+     */
     public RepositoryWSAccess(String urlRepository) throws MalformedURLException {
         if (urlRepository == null || urlRepository.isEmpty()) {
             if ((urlRepository = defaultRepo) == null || urlRepository.isEmpty()) {
@@ -58,6 +61,11 @@ public class RepositoryWSAccess {
                 ? urlRepository : urlRepository + "/") + WSDL_LOCATION;
     }
 
+    /**
+     * Test if the remote web service can be contacted (timeout of 10s).
+     * @throws MalformedURLException
+     * @throws IOException 
+     */
     private void testConnectionToService()
             throws MalformedURLException, IOException {
         if (logger.isDebugEnabled()) {
@@ -71,6 +79,13 @@ public class RepositoryWSAccess {
         connection.disconnect();
     }
 
+    /**
+     * After testing the connection to the web service, return the object 
+     * corresponding to the connection.
+     * @return connection to the service
+     * @throws MalformedURLException
+     * @throws IOException 
+     */
     private SubmissionService getConnectionToService()
             throws MalformedURLException, IOException {
         logger.log(Level.INFO, "Service Location: " + serviceLocation);
@@ -80,6 +95,17 @@ public class RepositoryWSAccess {
         return service.getSubmissionService();
     }
 
+    /**
+     * Get all publicly validated implementations from the repository.
+     * @param userAccess portal and user credentials
+     * @return list of implementations
+     * @throws MalformedURLException
+     * @throws UnauthorizedException
+     * @throws DatabaseProblemException
+     * @throws ForbiddenException
+     * @throws IOException
+     * @throws IllegalParameterException 
+     */
     public ImplShort[] getAllPublicValidatedImplementations(UserAccessConfig userAccess)
             throws MalformedURLException, UnauthorizedException,
             DatabaseProblemException, ForbiddenException, IOException,
@@ -102,6 +128,16 @@ public class RepositoryWSAccess {
         return listImplShort.toArray(new ImplShort[listImplShort.size()]);
     }
 
+    /**
+     * Get all workflow engine implementations for a specific implementation.
+     * @param implName name of the implementation
+     * @return list of workflow engine implementation names
+     * @throws MalformedURLException
+     * @throws DatabaseProblemException
+     * @throws ForbiddenException
+     * @throws IOException
+     * @throws IllegalParameterException 
+     */
     public String[] getAllWorkflowEngineInstances(String implName)
             throws MalformedURLException, DatabaseProblemException,
             ForbiddenException, IOException, IllegalParameterException {
@@ -123,6 +159,16 @@ public class RepositoryWSAccess {
         return listInstances.toArray(new String[listInstances.size()]);
     }
 
+    /**
+     * Get all non-fixed parameters for an implementation.
+     * @param implName name of the implementation
+     * @return list of all non-fixed parameters
+     * @throws MalformedURLException
+     * @throws DatabaseProblemException
+     * @throws ForbiddenException
+     * @throws IOException
+     * @throws IllegalParameterException 
+     */
     public Parameter[] getAllParameters(String implName)
             throws MalformedURLException, DatabaseProblemException,
             ForbiddenException, IOException, IllegalParameterException {
@@ -143,6 +189,17 @@ public class RepositoryWSAccess {
         return listParams.toArray(new Parameter[listParams.size()]);
     }
 
+    /**
+     * Get the full object representing the implementation.
+     * @param implName name of the desired implementation
+     * @return full implementation object
+     * @throws MalformedURLException
+     * @throws NotFoundException
+     * @throws DatabaseProblemException
+     * @throws ForbiddenException
+     * @throws IOException
+     * @throws IllegalParameterException 
+     */
     public ImplJSDL getFullImplJSDL(String implName)
             throws MalformedURLException, NotFoundException,
             DatabaseProblemException, ForbiddenException, IOException, IllegalParameterException {
@@ -163,6 +220,20 @@ public class RepositoryWSAccess {
         return implementation;
     }
 
+    /**
+     * Get a full workflow engine implementation from a workflow engine name and
+     * version, and a workflow engine implementation name.
+     * @param engineName  name of the workflow engine
+     * @param engineVersion version of the workflow engine
+     * @param instanceName name of the workflow engine implementation
+     * @return full workflow engine implementation object
+     * @throws MalformedURLException
+     * @throws NotFoundException
+     * @throws DatabaseProblemException
+     * @throws ForbiddenException
+     * @throws IOException
+     * @throws IllegalParameterException 
+     */
     public WorkflowEngineInstance getFullWEIForJSDL(String engineName,
             String engineVersion, String instanceName)
             throws MalformedURLException, NotFoundException,
@@ -192,6 +263,19 @@ public class RepositoryWSAccess {
         return instance;
     }
 
+    /**
+     * Get from a implementation name and workflow engine implementation name 
+     * the backend instance (middleware) used.
+     * @param implName name of the implementation
+     * @param instanceName name of the workflow engine implementation name
+     * @return backend instance (middleware)
+     * @throws MalformedURLException
+     * @throws NotFoundException
+     * @throws DatabaseProblemException
+     * @throws ForbiddenException
+     * @throws IOException
+     * @throws IllegalParameterException 
+     */
     public BeInstance getBackendInstance(String implName, String instanceName)
             throws MalformedURLException, NotFoundException,
             DatabaseProblemException, ForbiddenException, IOException,

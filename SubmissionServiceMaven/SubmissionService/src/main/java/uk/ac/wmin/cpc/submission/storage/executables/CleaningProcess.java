@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.storage.executables;
 
 import java.nio.file.DirectoryStream;
@@ -17,6 +13,7 @@ import uk.ac.wmin.cpc.submission.helpers.LogText;
 import uk.ac.wmin.cpc.submission.storage.FilesHelper;
 
 /**
+ * This class manages the cleaning process of the executables.
  *
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
@@ -61,6 +58,11 @@ public class CleaningProcess implements Runnable {
         }
     }
 
+    /**
+     * Check if a folder needs to be deleted.
+     * @param folder path of the folder
+     * @return true if it needs to be deleted, false otherwise
+     */
     private boolean checkDeletion(Path folder) {
         if (logger.isDebugEnabled()) {
             logger.log(Level.DEBUG, "Checking for: " + folder.getFileName());
@@ -82,6 +84,10 @@ public class CleaningProcess implements Runnable {
         return false;
     }
 
+    /**
+     * Browse the folders for a user and check if one needs to be deleted.
+     * @param userDir path to the concerned user folder
+     */
     private void browseApplicationsFolders(Path userDir) {
         try (DirectoryStream<Path> streamUserApp =
                 Files.newDirectoryStream(userDir)) {
@@ -97,6 +103,11 @@ public class CleaningProcess implements Runnable {
         }
     }
 
+    /**
+     * Check if the user directory needs to be deleted. If not, check if has
+     * sub-folders, if yes, then check if they need to be deleted.
+     * @param path path to the user directory
+     */
     private void browseUsersFolders(Path path) {
         try (DirectoryStream<Path> streamUserDir = Files.newDirectoryStream(path)) {
             for (Path userDir : streamUserDir) {
