@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.wmin.cpc.submission.frontend.interfaces;
 
 import javax.jws.WebMethod;
@@ -15,7 +11,8 @@ import uk.ac.wmin.cpc.submission.exceptions.RepositoryCommunicationException;
 import uk.ac.wmin.cpc.submission.exceptions.WrongJSDLException;
 
 /**
- *
+ * Interface containing the methods of the WSExecutionService.
+ * 
  * @author Benoit Meilhac <B.Meilhac@westminster.ac.uk>
  */
 @WebService(name = "WSExecutionService")
